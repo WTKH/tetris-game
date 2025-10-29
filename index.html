@@ -18,8 +18,7 @@
             align-items: center;
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 5px;
-            overflow: hidden;
+            padding: 10px;
         }
         .container {
             background: rgba(255, 255, 255, 0.95);
@@ -27,8 +26,6 @@
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 100%;
-            max-height: 100vh;
-            overflow-y: auto;
         }
         h1 {
             text-align: center;
@@ -39,7 +36,7 @@
         .game-layout {
             display: flex;
             gap: 15px;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
         }
         .game-side {
@@ -122,10 +119,7 @@
                 "left down right"
                 "drop drop drop";
             gap: 8px;
-            margin-top: 10px;
-            max-width: 280px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 240px;
         }
         .control-btn {
             padding: 15px;
@@ -139,7 +133,7 @@
             transition: all 0.1s;
             touch-action: manipulation;
             user-select: none;
-            min-height: 50px;
+            min-height: 55px;
         }
         .control-btn:active {
             background: #4558c2;
@@ -152,7 +146,8 @@
         .control-btn.drop { 
             grid-area: drop;
             background: #f0a000;
-            font-size: 1em;
+            font-size: 0.95em;
+            padding: 12px;
         }
         .control-btn.drop:active {
             background: #d89000;
@@ -190,98 +185,126 @@
         }
         @media (max-width: 768px) {
             body {
-                padding: 0;
-                align-items: flex-start;
+                padding: 5px;
             }
             .container {
-                border-radius: 0;
                 padding: 10px;
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
+                width: 100vw;
+                max-width: 100vw;
             }
             h1 {
-                font-size: 1.3em;
+                font-size: 1.2em;
                 margin-bottom: 8px;
             }
             .game-layout {
-                flex-direction: column;
                 gap: 10px;
-                flex: 1;
+                align-items: stretch;
             }
             .game-side {
-                width: 100%;
+                flex: 1;
                 display: flex;
                 justify-content: center;
+                align-items: center;
             }
             canvas#tetris {
-                max-width: 100%;
+                width: 100%;
                 height: auto;
+                max-height: 70vh;
+                object-fit: contain;
             }
             .side-panel {
-                width: 100%;
-                flex-direction: row;
-                flex-wrap: wrap;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
                 min-width: auto;
+                width: auto;
             }
             .info-compact {
-                flex: 1;
-                min-width: 80px;
+                padding: 8px;
             }
-            .info-compact.next {
-                flex-basis: 100%;
-                display: flex;
-                align-items: center;
-                gap: 15px;
+            .info-compact h3 {
+                font-size: 0.75em;
+                margin-bottom: 3px;
             }
-            .info-compact.next h3 {
-                margin: 0;
+            .score {
+                font-size: 1.2em;
             }
             .next-piece {
-                margin: 0;
+                width: 60px;
+                height: 60px;
             }
             .button-group {
-                flex-basis: 100%;
-                flex-direction: row;
+                gap: 6px;
             }
             .button-group button {
-                flex: 1;
+                padding: 8px;
+                font-size: 0.85em;
             }
             .controls-mobile {
                 display: grid;
+                max-width: 200px;
+            }
+            .control-btn {
+                padding: 12px;
+                font-size: 1.1em;
+                min-height: 48px;
+            }
+            .control-btn.drop {
+                font-size: 0.85em;
+                padding: 10px;
             }
             .controls-keyboard {
                 display: none;
             }
         }
-        @media (max-height: 700px) and (max-width: 768px) {
-            canvas#tetris {
-                max-height: 45vh;
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
             }
-            .control-btn {
-                padding: 12px;
-                font-size: 1.1em;
-                min-height: 45px;
-            }
-        }
-        @media (max-height: 600px) and (max-width: 768px) {
             h1 {
                 font-size: 1.1em;
                 margin-bottom: 5px;
             }
-            canvas#tetris {
-                max-height: 40vh;
+            .game-layout {
+                gap: 8px;
+            }
+            .info-compact {
+                padding: 6px;
+            }
+            .score {
+                font-size: 1em;
+            }
+            .next-piece {
+                width: 50px;
+                height: 50px;
+            }
+            .button-group button {
+                padding: 6px;
+                font-size: 0.75em;
+            }
+            .controls-mobile {
+                max-width: 160px;
+                gap: 6px;
             }
             .control-btn {
                 padding: 10px;
                 font-size: 1em;
-                min-height: 40px;
+                min-height: 42px;
             }
-            .info-compact {
+            .control-btn.drop {
+                font-size: 0.75em;
                 padding: 8px;
             }
-            .score {
-                font-size: 1.2em;
+        }
+        @media (orientation: landscape) and (max-height: 500px) {
+            h1 {
+                display: none;
+            }
+            .container {
+                padding: 5px;
+            }
+            canvas#tetris {
+                max-height: 85vh;
             }
         }
     </style>
@@ -307,7 +330,7 @@
                     <h3>レベル</h3>
                     <div class="score" id="level">1</div>
                 </div>
-                <div class="info-compact next">
+                <div class="info-compact">
                     <h3>次</h3>
                     <canvas class="next-piece" id="nextPiece" width="80" height="80"></canvas>
                 </div>
@@ -317,13 +340,13 @@
                     <button id="restartBtn" class="restart" style="display: none;">やり直し</button>
                 </div>
             </div>
-        </div>
-        <div class="controls-mobile">
-            <button class="control-btn rotate" id="btnRotate">↻</button>
-            <button class="control-btn left" id="btnLeft">←</button>
-            <button class="control-btn down" id="btnDown">↓</button>
-            <button class="control-btn right" id="btnRight">→</button>
-            <button class="control-btn drop" id="btnDrop">一気に落とす</button>
+            <div class="controls-mobile">
+                <button class="control-btn rotate" id="btnRotate">↻</button>
+                <button class="control-btn left" id="btnLeft">←</button>
+                <button class="control-btn down" id="btnDown">↓</button>
+                <button class="control-btn right" id="btnRight">→</button>
+                <button class="control-btn drop" id="btnDrop">一気に落とす</button>
+            </div>
         </div>
         <div class="controls-keyboard">
             <h3>キーボード操作</h3>
