@@ -18,83 +18,85 @@
             align-items: center;
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 10px;
-            overflow-x: hidden;
+            padding: 5px;
+            overflow: hidden;
         }
         .container {
             background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 20px;
+            padding: 15px;
+            border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 100%;
+            max-height: 100vh;
+            overflow-y: auto;
         }
         h1 {
             text-align: center;
             color: #333;
-            margin-bottom: 15px;
-            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-size: 1.5em;
         }
-        .game-area {
+        .game-layout {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: flex-start;
-            flex-wrap: wrap;
             justify-content: center;
         }
-        .game-container {
+        .game-side {
             position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
         }
-        canvas {
+        canvas#tetris {
             border: 3px solid #333;
-            border-radius: 10px;
+            border-radius: 8px;
             background: #000;
-            max-width: 100%;
-            height: auto;
+            display: block;
         }
-        .info {
+        .side-panel {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            min-width: 200px;
+            gap: 10px;
+            min-width: 130px;
         }
-        .info-box {
+        .info-compact {
             background: #f8f9fa;
-            padding: 12px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
-        .info-box h3 {
-            margin-bottom: 8px;
+        .info-compact h3 {
+            margin-bottom: 5px;
             color: #667eea;
-            font-size: 1em;
+            font-size: 0.85em;
         }
         .score {
-            font-size: 1.8em;
+            font-size: 1.5em;
             font-weight: bold;
             color: #333;
         }
         .next-piece {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             border: 2px solid #ddd;
             border-radius: 5px;
             background: #000;
+            margin: 0 auto;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
         button {
-            width: 100%;
-            padding: 12px;
-            font-size: 1.1em;
+            padding: 10px;
+            font-size: 0.95em;
             background: #667eea;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.3s;
+            transition: all 0.2s;
             touch-action: manipulation;
         }
         button:hover {
@@ -102,67 +104,71 @@
         }
         button:active {
             background: #4558c2;
-            transform: scale(0.98);
+            transform: scale(0.95);
+        }
+        button.restart {
+            background: #f0a000;
+        }
+        button.restart:hover {
+            background: #d89000;
+        }
+        button.restart:active {
+            background: #c08000;
         }
         .controls-mobile {
             display: none;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-            max-width: 300px;
-            width: 100%;
+            grid-template-areas: 
+                ". rotate ."
+                "left down right"
+                "drop drop drop";
+            gap: 8px;
+            margin-top: 10px;
+            max-width: 280px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .control-btn {
-            padding: 20px;
-            font-size: 1.5em;
+            padding: 15px;
+            font-size: 1.3em;
             background: #667eea;
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.1s;
             touch-action: manipulation;
             user-select: none;
+            min-height: 50px;
         }
         .control-btn:active {
             background: #4558c2;
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
-        .control-btn.rotate {
-            grid-column: 2;
-        }
-        .control-btn.left {
-            grid-column: 1;
-            grid-row: 2;
-        }
-        .control-btn.down {
-            grid-column: 2;
-            grid-row: 2;
-        }
-        .control-btn.right {
-            grid-column: 3;
-            grid-row: 2;
-        }
-        .control-btn.drop {
-            grid-column: 1 / 4;
-            grid-row: 3;
+        .control-btn.rotate { grid-area: rotate; }
+        .control-btn.left { grid-area: left; }
+        .control-btn.down { grid-area: down; }
+        .control-btn.right { grid-area: right; }
+        .control-btn.drop { 
+            grid-area: drop;
             background: #f0a000;
+            font-size: 1em;
         }
         .control-btn.drop:active {
             background: #d89000;
         }
         .controls-keyboard {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-size: 0.9em;
-            line-height: 1.6;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.8em;
+            line-height: 1.5;
         }
         .controls-keyboard h3 {
             color: #667eea;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            font-size: 0.95em;
         }
         .game-over {
             position: absolute;
@@ -171,41 +177,111 @@
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.95);
             color: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             text-align: center;
             display: none;
             z-index: 1000;
-            min-width: 250px;
+            min-width: 200px;
         }
         .game-over h2 {
-            font-size: 2em;
-            margin-bottom: 20px;
+            font-size: 1.8em;
+            margin-bottom: 15px;
         }
         @media (max-width: 768px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+            }
+            .container {
+                border-radius: 0;
+                padding: 10px;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            h1 {
+                font-size: 1.3em;
+                margin-bottom: 8px;
+            }
+            .game-layout {
+                flex-direction: column;
+                gap: 10px;
+                flex: 1;
+            }
+            .game-side {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+            canvas#tetris {
+                max-width: 100%;
+                height: auto;
+            }
+            .side-panel {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                min-width: auto;
+            }
+            .info-compact {
+                flex: 1;
+                min-width: 80px;
+            }
+            .info-compact.next {
+                flex-basis: 100%;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            .info-compact.next h3 {
+                margin: 0;
+            }
+            .next-piece {
+                margin: 0;
+            }
+            .button-group {
+                flex-basis: 100%;
+                flex-direction: row;
+            }
+            .button-group button {
+                flex: 1;
+            }
             .controls-mobile {
                 display: grid;
             }
             .controls-keyboard {
                 display: none;
             }
+        }
+        @media (max-height: 700px) and (max-width: 768px) {
+            canvas#tetris {
+                max-height: 45vh;
+            }
+            .control-btn {
+                padding: 12px;
+                font-size: 1.1em;
+                min-height: 45px;
+            }
+        }
+        @media (max-height: 600px) and (max-width: 768px) {
             h1 {
-                font-size: 1.5em;
+                font-size: 1.1em;
+                margin-bottom: 5px;
             }
-            .game-area {
-                flex-direction: column;
+            canvas#tetris {
+                max-height: 40vh;
             }
-            .info {
-                width: 100%;
-                flex-direction: row;
-                flex-wrap: wrap;
+            .control-btn {
+                padding: 10px;
+                font-size: 1em;
+                min-height: 40px;
             }
-            .info-box {
-                flex: 1;
-                min-width: 100px;
+            .info-compact {
+                padding: 8px;
             }
-            .info-box:last-child {
-                flex-basis: 100%;
+            .score {
+                font-size: 1.2em;
             }
         }
     </style>
@@ -213,47 +289,45 @@
 <body>
     <div class="container">
         <h1>🎮 テトリス</h1>
-        <div class="game-area">
-            <div class="game-container">
-                <div style="position: relative;">
-                    <canvas id="tetris" width="300" height="600"></canvas>
-                    <div class="game-over" id="gameOver">
-                        <h2>ゲームオーバー</h2>
-                        <p style="font-size: 1.5em; margin-bottom: 20px;">スコア: <span id="finalScore">0</span></p>
-                        <button onclick="location.reload()">もう一度プレイ</button>
-                    </div>
-                </div>
-                <div class="controls-mobile">
-                    <button class="control-btn rotate" id="btnRotate">↻</button>
-                    <button class="control-btn left" id="btnLeft">←</button>
-                    <button class="control-btn down" id="btnDown">↓</button>
-                    <button class="control-btn right" id="btnRight">→</button>
-                    <button class="control-btn drop" id="btnDrop">一気に落とす</button>
+        <div class="game-layout">
+            <div class="game-side">
+                <canvas id="tetris" width="240" height="480"></canvas>
+                <div class="game-over" id="gameOver">
+                    <h2>ゲームオーバー</h2>
+                    <p style="font-size: 1.3em; margin-bottom: 15px;">スコア: <span id="finalScore">0</span></p>
+                    <button onclick="location.reload()">もう一度</button>
                 </div>
             </div>
-            <div class="info">
-                <div class="info-box">
+            <div class="side-panel">
+                <div class="info-compact">
                     <h3>スコア</h3>
                     <div class="score" id="score">0</div>
                 </div>
-                <div class="info-box">
+                <div class="info-compact">
                     <h3>レベル</h3>
                     <div class="score" id="level">1</div>
                 </div>
-                <div class="info-box">
-                    <h3>次のブロック</h3>
-                    <canvas class="next-piece" id="nextPiece" width="100" height="100"></canvas>
+                <div class="info-compact next">
+                    <h3>次</h3>
+                    <canvas class="next-piece" id="nextPiece" width="80" height="80"></canvas>
                 </div>
-                <button id="startBtn">スタート</button>
-                <button id="pauseBtn" style="display: none;">一時停止</button>
+                <div class="button-group">
+                    <button id="startBtn">スタート</button>
+                    <button id="pauseBtn" style="display: none;">一時停止</button>
+                    <button id="restartBtn" class="restart" style="display: none;">やり直し</button>
+                </div>
             </div>
+        </div>
+        <div class="controls-mobile">
+            <button class="control-btn rotate" id="btnRotate">↻</button>
+            <button class="control-btn left" id="btnLeft">←</button>
+            <button class="control-btn down" id="btnDown">↓</button>
+            <button class="control-btn right" id="btnRight">→</button>
+            <button class="control-btn drop" id="btnDrop">一気に落とす</button>
         </div>
         <div class="controls-keyboard">
             <h3>キーボード操作</h3>
-            <p>← → : 左右移動</p>
-            <p>↑ : 回転</p>
-            <p>↓ : 高速落下</p>
-            <p>スペース : 一気に落とす</p>
+            <p>← → : 移動 | ↑ : 回転 | ↓ : 高速落下 | スペース : 一気に落とす</p>
         </div>
     </div>
 
@@ -266,9 +340,10 @@
         const levelEl = document.getElementById('level');
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
+        const restartBtn = document.getElementById('restartBtn');
         const gameOverEl = document.getElementById('gameOver');
 
-        const BLOCK_SIZE = 30;
+        const BLOCK_SIZE = 24;
         const COLS = 10;
         const ROWS = 20;
 
@@ -374,14 +449,14 @@
             nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
             
             if (nextPiece) {
-                const offsetX = (nextCanvas.width - nextPiece.shape[0].length * 20) / 2;
-                const offsetY = (nextCanvas.height - nextPiece.shape.length * 20) / 2;
+                const offsetX = (nextCanvas.width - nextPiece.shape[0].length * 16) / 2;
+                const offsetY = (nextCanvas.height - nextPiece.shape.length * 16) / 2;
                 
                 nextPiece.shape.forEach((row, y) => {
                     row.forEach((value, x) => {
                         if (value) {
                             nextCtx.fillStyle = nextPiece.color;
-                            nextCtx.fillRect(x * 20 + offsetX, y * 20 + offsetY, 19, 19);
+                            nextCtx.fillRect(x * 16 + offsetX, y * 16 + offsetY, 15, 15);
                         }
                     });
                 });
@@ -509,6 +584,24 @@
             drawBoard();
         }
 
+        function startGame() {
+            board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+            score = 0;
+            level = 1;
+            dropInterval = 1000;
+            updateScore();
+            currentPiece = createPiece();
+            nextPiece = createPiece();
+            drawNextPiece();
+            gameRunning = true;
+            gamePaused = false;
+            gameOverEl.style.display = 'none';
+            startBtn.style.display = 'none';
+            pauseBtn.style.display = 'block';
+            restartBtn.style.display = 'block';
+            requestAnimationFrame(gameLoop);
+        }
+
         // キーボード操作
         document.addEventListener('keydown', e => {
             if (!gameRunning || gamePaused) return;
@@ -575,22 +668,7 @@
             }
         }, { passive: false });
 
-        startBtn.addEventListener('click', () => {
-            board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
-            score = 0;
-            level = 1;
-            dropInterval = 1000;
-            updateScore();
-            currentPiece = createPiece();
-            nextPiece = createPiece();
-            drawNextPiece();
-            gameRunning = true;
-            gamePaused = false;
-            gameOverEl.style.display = 'none';
-            startBtn.style.display = 'none';
-            pauseBtn.style.display = 'block';
-            requestAnimationFrame(gameLoop);
-        });
+        startBtn.addEventListener('click', startGame);
 
         pauseBtn.addEventListener('click', () => {
             gamePaused = !gamePaused;
@@ -598,6 +676,12 @@
             if (!gamePaused) {
                 lastTime = performance.now();
                 requestAnimationFrame(gameLoop);
+            }
+        });
+
+        restartBtn.addEventListener('click', () => {
+            if (confirm('ゲームをやり直しますか？')) {
+                location.reload();
             }
         });
 
