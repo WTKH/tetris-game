@@ -1025,23 +1025,13 @@
                 return;
             }
 
-            if (!window.storage) {
-                alert('ストレージきのうがつかえません');
-                return;
-            }
-
             try {
                 const userKey = `user:${username}`;
-                let result;
+                const userDataStr = localStorage.getItem(userKey);
                 
-                try {
-                    result = await window.storage.get(userKey);
-                } catch (getError) {
-                    result = null;
-                }
-                
-                if (result && result.value) {
-                    const userData = JSON.parse(result.value);
+                if (userDataStr) {
+                    // Existing user
+                    const userData = JSON.parse(userDataStr);
                     if (userData.password === password) {
                         loginUser(username);
                     } else {
@@ -1072,27 +1062,16 @@
                 return;
             }
 
-            if (!window.storage) {
-                alert('ストレージきのうがつかえません');
-                return;
-            }
-
             try {
                 const userKey = `user:${username}`;
-                let result;
+                const existingUser = localStorage.getItem(userKey);
                 
-                try {
-                    result = await window.storage.get(userKey);
-                } catch (getError) {
-                    result = null;
-                }
-                
-                if (result && result.value) {
+                if (existingUser) {
                     showSignupError('このなまえはすでにつかわれています');
                     return;
                 }
 
-                await window.storage.set(userKey, JSON.stringify({ password }));
+                localStorage.setItem(userKey, JSON.stringify({ password }));
                 alert(`ようこそ、${username}さん！アカウントをつくりました！`);
                 loginUser(username);
             } catch (error) {
@@ -1228,9 +1207,11 @@
         async function loadDayData(date) {
             if (!currentUser) return {};
             try {
-                const result = await window.storage.get(`habits:${currentUser}:${date}`);
-                return result ? JSON.parse(result.value) : {};
+                const key = `habits:${currentUser}:${date}`;
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : {};
             } catch (error) {
+                console.error('読み込みエラー:', error);
                 return {};
             }
         }
@@ -1241,38 +1222,31 @@
             // Prevent multiple simultaneous saves
             if (isSaving && retryCount === 0) {
                 console.log('Already saving, queuing...');
-                await new Promise(resolve => setTimeout(resolve, 300));
+                await new Promise(resolve => setTimeout(resolve, 100));
                 return saveDayData(date, data, 0);
             }
             
             isSaving = true;
             
             try {
-                const result = await window.storage.set(`habits:${currentUser}:${date}`, JSON.stringify(data));
+                const key = `habits:${currentUser}:${date}`;
+                localStorage.setItem(key, JSON.stringify(data));
                 isSaving = false;
-                
-                if (!result) {
-                    console.error('Storage set returned null');
-                    if (retryCount < 2) {
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                        return saveDayData(date, data, retryCount + 1);
-                    }
-                }
-                return result;
+                return true;
             } catch (error) {
                 isSaving = false;
                 console.error('保存エラー:', error);
                 
                 // Retry up to 2 times with increasing delay
                 if (retryCount < 2) {
-                    const delay = (retryCount + 1) * 500;
+                    const delay = (retryCount + 1) * 200;
                     console.log(`Retrying in ${delay}ms...`);
                     await new Promise(resolve => setTimeout(resolve, delay));
                     return saveDayData(date, data, retryCount + 1);
                 }
                 
-                // After all retries failed, silently fail without breaking the app
                 console.error('All retry attempts failed');
+                return false;
             }
         }
 
