@@ -2,714 +2,1477 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>テトリス</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>まいにちのおやくそくチェック！</title>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
+
+        :root {
+            --primary: #FF6B9D;
+            --secondary: #FFA07A;
+            --success: #4ECDC4;
+            --warning: #FFD93D;
+            --purple: #A78BFA;
+            --blue: #60A5FA;
+            --bg: #FFF8E7;
+            --card-bg: #FFFFFF;
+            --shadow: rgba(255, 107, 157, 0.2);
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background: linear-gradient(135deg, #FFF8E7 0%, #FFE5EC 50%, #E5F3FF 100%);
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 10px;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(160, 139, 250, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
-        h1 {
+
+        .header {
             text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--purple), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: rainbow 3s ease-in-out infinite;
+        }
+
+        @keyframes rainbow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(20deg); }
+        }
+
+        .header .emoji {
+            font-size: 4rem;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            75% { transform: translateY(-5px) rotate(5deg); }
+        }
+
+        .date-display {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px var(--shadow);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            border: 3px solid var(--warning);
+            animation: fadeIn 1s ease-out 0.2s both;
+        }
+
+        .date-nav-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--success), var(--blue));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(78, 205, 196, 0.3);
+        }
+
+        .date-nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .date-nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .date-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .current-date {
+            flex: 1;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .checklist-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px var(--shadow);
+            margin-bottom: 30px;
+            border: 4px solid var(--success);
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), rgba(78, 205, 196, 0.05));
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
+        }
+
+        .checklist-item.checked-yes {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(96, 165, 250, 0.2));
+            border-color: var(--success);
+        }
+
+        .checklist-item.checked-no {
+            background: linear-gradient(135deg, rgba(255, 215, 61, 0.2), rgba(255, 160, 122, 0.2));
+            border-color: var(--warning);
+        }
+
+        .item-question {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            flex: 1;
+        }
+
+        .item-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .check-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .check-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .check-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, var(--success), var(--blue));
+            color: white;
+        }
+
+        .btn-yes.selected {
+            background: var(--success);
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.3);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, var(--warning), var(--secondary));
+            color: #333;
+        }
+
+        .btn-no.selected {
+            background: var(--warning);
+            box-shadow: 0 0 0 4px rgba(255, 215, 61, 0.3);
+        }
+
+        .stats-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px var(--shadow);
+            border: 4px solid var(--purple);
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .stats-card h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--purple);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(160, 139, 250, 0.1), rgba(255, 107, 157, 0.1));
+            border: 2px solid var(--purple);
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #666;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .history-table th {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            padding: 15px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            border-radius: 10px;
+        }
+
+        .history-table td {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(160, 139, 250, 0.2);
+        }
+
+        .history-table tr:hover td {
+            background: rgba(160, 139, 250, 0.1);
+        }
+
+        .check-mark {
+            font-size: 1.5rem;
+        }
+
+        .check-mark.yes {
+            color: var(--success);
+        }
+
+        .check-mark.no {
+            color: var(--warning);
+        }
+
+        .progress-bar-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+        }
+
+        .progress-label {
+            font-size: 1.2rem;
+            font-weight: 700;
             color: #333;
             margin-bottom: 10px;
-            font-size: 1.5em;
         }
-        .game-layout {
+
+        .progress-bar {
+            height: 40px;
+            background: rgba(200, 200, 200, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--blue), var(--purple));
+            border-radius: 20px;
+            transition: width 0.8s ease;
             display: flex;
-            gap: 15px;
             align-items: center;
             justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(78, 205, 196, 0.5);
         }
-        .game-side {
-            position: relative;
+
+        .celebrate {
+            animation: celebrate 0.6s ease-out;
         }
-        canvas#tetris {
-            border: 3px solid #333;
-            border-radius: 8px;
-            background: #000;
-            display: block;
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
         }
-        .side-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 130px;
-        }
-        .info-compact {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        .trophy {
+            font-size: 3rem;
             text-align: center;
+            margin: 20px 0;
+            animation: spin 2s ease-in-out infinite;
         }
-        .info-compact h3 {
-            margin-bottom: 5px;
-            color: #667eea;
-            font-size: 0.85em;
+
+        @keyframes spin {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(10deg) scale(1.1); }
         }
-        .score {
-            font-size: 1.5em;
-            font-weight: bold;
+
+        /* Login Screen Styles */
+        .login-container {
+            max-width: 450px;
+            margin: 100px auto;
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 15px 50px var(--shadow);
+            border: 4px solid var(--primary);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header .emoji {
+            font-size: 5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
             color: #333;
+            margin-bottom: 10px;
         }
-        .next-piece {
-            width: 80px;
-            height: 80px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            background: #000;
-            margin: 0 auto;
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid var(--success);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
         }
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2);
+            transform: scale(1.02);
         }
-        button {
-            padding: 10px;
-            font-size: 0.95em;
-            background: #667eea;
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-            touch-action: manipulation;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
+            margin-top: 10px;
         }
-        button:hover {
-            background: #5568d3;
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.5);
         }
-        button:active {
-            background: #4558c2;
-            transform: scale(0.95);
+
+        .login-btn:active {
+            transform: translateY(-1px);
         }
-        button.restart {
-            background: #f0a000;
-        }
-        button.restart:hover {
-            background: #d89000;
-        }
-        button.restart:active {
-            background: #c08000;
-        }
-        .controls-mobile {
+
+        .error-message {
+            color: #ff4444;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 15px;
             display: none;
-            grid-template-areas: 
-                ". rotate ."
-                "left down right"
-                "drop drop drop";
-            gap: 8px;
-            max-width: 240px;
         }
-        .control-btn {
-            padding: 15px;
-            font-size: 1.3em;
-            background: #667eea;
-            color: white;
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px var(--shadow);
+            border: 3px solid var(--success);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .user-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .user-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .logout-btn, .home-btn {
+            padding: 10px 20px;
             border: none;
             border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.1s;
-            touch-action: manipulation;
-            user-select: none;
-            min-height: 55px;
+            transition: all 0.3s ease;
         }
-        .control-btn:active {
-            background: #4558c2;
-            transform: scale(0.92);
+
+        .logout-btn {
+            background: var(--warning);
+            color: #333;
         }
-        .control-btn.rotate { grid-area: rotate; }
-        .control-btn.left { grid-area: left; }
-        .control-btn.down { grid-area: down; }
-        .control-btn.right { grid-area: right; }
-        .control-btn.drop { 
-            grid-area: drop;
-            background: #f0a000;
-            font-size: 0.95em;
-            padding: 12px;
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(255, 215, 61, 0.5);
         }
-        .control-btn.drop:active {
-            background: #d89000;
-        }
-        .controls-keyboard {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.8em;
-            line-height: 1.5;
-        }
-        .controls-keyboard h3 {
-            color: #667eea;
-            margin-bottom: 5px;
-            font-size: 0.95em;
-        }
-        .game-over {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.95);
+
+        .home-btn {
+            background: linear-gradient(135deg, var(--purple), var(--blue));
             color: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            display: none;
-            z-index: 1000;
-            min-width: 200px;
         }
-        .game-over h2 {
-            font-size: 1.8em;
+
+        .home-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(160, 139, 250, 0.5);
+        }
+
+        .edit-mode-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(160, 139, 250, 0.3);
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(160, 139, 250, 0.4);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, var(--success), var(--blue));
+        }
+
+        .history-table td.editable {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .history-table td.editable:hover {
+            background: rgba(160, 139, 250, 0.2);
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Date Selection Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 25px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 4px solid var(--primary);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .modal-date {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--purple);
+        }
+
+        .modal-checklist-item {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), rgba(78, 205, 196, 0.05));
+            border: 2px solid transparent;
+        }
+
+        .modal-checklist-item.checked-yes {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(96, 165, 250, 0.2));
+            border-color: var(--success);
+        }
+
+        .modal-checklist-item.checked-no {
+            background: linear-gradient(135deg, rgba(255, 215, 61, 0.2), rgba(255, 160, 122, 0.2));
+            border-color: var(--warning);
+        }
+
+        .modal-item-question {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
             margin-bottom: 15px;
         }
+
+        .modal-item-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .close-modal-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(160, 139, 250, 0.4);
+        }
+
+        .history-table td.date-cell {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 900;
+        }
+
+        .history-table td.date-cell:hover {
+            background: rgba(255, 107, 157, 0.2);
+            transform: scale(1.05);
+            color: var(--primary);
+        }
+
         @media (max-width: 768px) {
-            body {
-                padding: 5px;
+            .header h1 {
+                font-size: 2rem;
             }
-            .container {
-                padding: 10px;
-                width: 100vw;
-                max-width: 100vw;
+            
+            .item-question {
+                font-size: 1.1rem;
             }
-            h1 {
-                font-size: 1.2em;
-                margin-bottom: 8px;
+            
+            .check-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
             }
-            .game-layout {
-                gap: 10px;
-                align-items: stretch;
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
-            .game-side {
-                flex: 1;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+
+            .login-container {
+                margin: 50px 20px;
+                padding: 30px;
             }
-            canvas#tetris {
-                width: 100%;
-                height: auto;
-                max-height: 70vh;
-                object-fit: contain;
+
+            .modal-content {
+                padding: 25px;
+                width: 95%;
             }
-            .side-panel {
-                display: flex;
+
+            .modal-item-buttons {
                 flex-direction: column;
-                gap: 8px;
-                min-width: auto;
-                width: auto;
-            }
-            .info-compact {
-                padding: 8px;
-            }
-            .info-compact h3 {
-                font-size: 0.75em;
-                margin-bottom: 3px;
-            }
-            .score {
-                font-size: 1.2em;
-            }
-            .next-piece {
-                width: 60px;
-                height: 60px;
-            }
-            .button-group {
-                gap: 6px;
-            }
-            .button-group button {
-                padding: 8px;
-                font-size: 0.85em;
-            }
-            .controls-mobile {
-                display: grid;
-                max-width: 200px;
-            }
-            .control-btn {
-                padding: 12px;
-                font-size: 1.1em;
-                min-height: 48px;
-            }
-            .control-btn.drop {
-                font-size: 0.85em;
-                padding: 10px;
-            }
-            .controls-keyboard {
-                display: none;
-            }
-        }
-        @media (max-width: 480px) {
-            .container {
-                padding: 8px;
-            }
-            h1 {
-                font-size: 1.1em;
-                margin-bottom: 5px;
-            }
-            .game-layout {
-                gap: 8px;
-            }
-            .info-compact {
-                padding: 6px;
-            }
-            .score {
-                font-size: 1em;
-            }
-            .next-piece {
-                width: 50px;
-                height: 50px;
-            }
-            .button-group button {
-                padding: 6px;
-                font-size: 0.75em;
-            }
-            .controls-mobile {
-                max-width: 160px;
-                gap: 6px;
-            }
-            .control-btn {
-                padding: 10px;
-                font-size: 1em;
-                min-height: 42px;
-            }
-            .control-btn.drop {
-                font-size: 0.75em;
-                padding: 8px;
-            }
-        }
-        @media (orientation: landscape) and (max-height: 500px) {
-            h1 {
-                display: none;
-            }
-            .container {
-                padding: 5px;
-            }
-            canvas#tetris {
-                max-height: 85vh;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎮 テトリス</h1>
-        <div class="game-layout">
-            <div class="game-side">
-                <canvas id="tetris" width="240" height="480"></canvas>
-                <div class="game-over" id="gameOver">
-                    <h2>ゲームオーバー</h2>
-                    <p style="font-size: 1.3em; margin-bottom: 15px;">スコア: <span id="finalScore">0</span></p>
-                    <button onclick="location.reload()">もう一度</button>
-                </div>
+    <!-- Initial Choice Screen -->
+    <div id="choiceScreen" class="login-container">
+        <div class="login-header">
+            <div class="emoji">🌟</div>
+            <h2>まいにちのおやくそくチェック</h2>
+        </div>
+        <button class="login-btn" onclick="showLoginScreen()" style="margin-bottom: 20px;">ログイン</button>
+        <button class="login-btn" onclick="showSignupScreen()" style="background: linear-gradient(135deg, var(--success), var(--blue));">あたらしくはじめる</button>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container hidden">
+        <div class="login-header">
+            <div class="emoji">🔐</div>
+            <h2>ログイン</h2>
+        </div>
+        <div id="loginFormDiv">
+            <div class="form-group">
+                <label for="loginUsername">なまえ</label>
+                <input type="text" id="loginUsername" autocomplete="username">
             </div>
-            <div class="side-panel">
-                <div class="info-compact">
-                    <h3>スコア</h3>
-                    <div class="score" id="score">0</div>
-                </div>
-                <div class="info-compact">
-                    <h3>レベル</h3>
-                    <div class="score" id="level">1</div>
-                </div>
-                <div class="info-compact">
-                    <h3>次</h3>
-                    <canvas class="next-piece" id="nextPiece" width="80" height="80"></canvas>
-                </div>
-                <div class="button-group">
-                    <button id="startBtn">スタート</button>
-                    <button id="pauseBtn" style="display: none;">一時停止</button>
-                    <button id="restartBtn" class="restart" style="display: none;">やり直し</button>
-                </div>
+            <div class="form-group">
+                <label for="loginPassword">パスワード</label>
+                <input type="password" id="loginPassword" autocomplete="current-password">
             </div>
-            <div class="controls-mobile">
-                <button class="control-btn rotate" id="btnRotate">↻</button>
-                <button class="control-btn left" id="btnLeft">←</button>
-                <button class="control-btn down" id="btnDown">↓</button>
-                <button class="control-btn right" id="btnRight">→</button>
-                <button class="control-btn drop" id="btnDrop">一気に落とす</button>
+            <button class="login-btn" id="loginButton">ログイン</button>
+            <button class="logout-btn" onclick="backToChoice()" style="width: 100%; margin-top: 15px;">もどる</button>
+            <div class="error-message" id="loginErrorMessage">なまえかパスワードがちがいます</div>
+        </div>
+    </div>
+
+    <!-- Signup Screen -->
+    <div id="signupScreen" class="login-container hidden">
+        <div class="login-header">
+            <div class="emoji">✨</div>
+            <h2>あたらしくはじめる</h2>
+        </div>
+        <div id="signupFormDiv">
+            <div class="form-group">
+                <label for="signupUsername">なまえをきめてね</label>
+                <input type="text" id="signupUsername" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">パスワードをきめてね</label>
+                <input type="password" id="signupPassword" autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label for="signupPasswordConfirm">もういちどパスワード</label>
+                <input type="password" id="signupPasswordConfirm" autocomplete="new-password">
+            </div>
+            <button class="login-btn" id="signupButton" style="background: linear-gradient(135deg, var(--success), var(--blue));">アカウントをつくる</button>
+            <button class="logout-btn" onclick="backToChoice()" style="width: 100%; margin-top: 15px;">もどる</button>
+            <div class="error-message" id="signupErrorMessage">エラーメッセージ</div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="container hidden" id="mainApp">
+        <div class="user-info">
+            <div class="user-name">👤 <span id="displayName"></span>さん</div>
+            <div class="user-buttons">
+                <button class="home-btn" onclick="goToToday()">🏠 きょうにもどる</button>
+                <button class="logout-btn" onclick="logout()">ログアウト</button>
             </div>
         </div>
-        <div class="controls-keyboard">
-            <h3>キーボード操作</h3>
-            <p>← → : 移動 | ↑ : 回転 | ↓ : 高速落下 | スペース : 一気に落とす</p>
+
+        <div class="header">
+            <div class="emoji">🌟</div>
+            <h1>まいにちのおやくそくチェック！</h1>
+        </div>
+
+        <div class="date-display">
+            <button class="date-nav-btn" onclick="changeDate(-1)">◀ まえの日</button>
+            <div class="current-date" id="dateDisplay">📅 </div>
+            <button class="date-nav-btn" onclick="changeDate(1)" id="nextDayBtn">つぎの日 ▶</button>
+        </div>
+
+        <div class="checklist-card">
+            <div id="checklist"></div>
+        </div>
+
+        <div class="stats-card">
+            <h2>📊 こんしゅうのがんばり</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="weeklyPercentage">0%</div>
+                    <div class="stat-label">できたりつ</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="todayCount">0/5</div>
+                    <div class="stat-label">きょうのスコア</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="weekStreak">0</div>
+                    <div class="stat-label">れんぞくにっすう</div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-label">こんしゅうのたっせいりつ</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
+                </div>
+            </div>
+
+            <div id="trophyDisplay"></div>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--purple); font-size: 1.5rem; text-align: center;">📅 こんしゅうのきろく（日づけをクリックしてにゅうりょく・しゅうせい）</h3>
+            <div style="overflow-x: auto;">
+                <table class="history-table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>日づけ</th>
+                            <th>あさごはん</th>
+                            <th>あさがくしゅう</th>
+                            <th>ジャングルジム</th>
+                            <th>せんせいのおはなし</th>
+                            <th>おともだち</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Date Edit Modal -->
+    <div id="dateModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 チェックリスト</h2>
+                <div class="modal-date" id="modalDate"></div>
+            </div>
+            <div id="modalChecklist"></div>
+            <button class="close-modal-btn" onclick="closeModal()">とじる</button>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('tetris');
-        const ctx = canvas.getContext('2d');
-        const nextCanvas = document.getElementById('nextPiece');
-        const nextCtx = nextCanvas.getContext('2d');
-        const scoreEl = document.getElementById('score');
-        const levelEl = document.getElementById('level');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const restartBtn = document.getElementById('restartBtn');
-        const gameOverEl = document.getElementById('gameOver');
+        // Audio context for success sound
+        let audioContext;
+        let currentUser = null;
+        let selectedDate = null;
+        let currentViewDate = null; // The date currently being viewed/edited
+        let isSaving = false; // Prevent multiple simultaneous saves
 
-        const BLOCK_SIZE = 24;
-        const COLS = 10;
-        const ROWS = 20;
-
-        let board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
-        let score = 0;
-        let level = 1;
-        let gameRunning = false;
-        let gamePaused = false;
-        let currentPiece = null;
-        let nextPiece = null;
-        let dropCounter = 0;
-        let dropInterval = 1000;
-        let lastTime = 0;
-
-        const PIECES = [
-            [[1,1,1,1]], // I
-            [[1,1],[1,1]], // O
-            [[0,1,0],[1,1,1]], // T
-            [[1,0,0],[1,1,1]], // L
-            [[0,0,1],[1,1,1]], // J
-            [[0,1,1],[1,1,0]], // S
-            [[1,1,0],[0,1,1]]  // Z
+        const questions = [
+            { id: 'breakfast', text: '朝ごはんは時間までにたべた？', yes: 'たべた！', no: 'たべられなかった' },
+            { id: 'study', text: '朝学習はがんばった？', yes: 'がんばった！', no: 'できなかった' },
+            { id: 'jungle', text: 'ジャングルジムはおりた？', yes: 'おりた！', no: 'おりなかった' },
+            { id: 'teacher', text: '先生のお話はきいた？', yes: 'きいた！', no: 'できなかった' },
+            { id: 'friends', text: 'お友だちにやさしくできた？', yes: 'できた！', no: 'できなかった' }
         ];
 
-        const COLORS = [
-            '#00f0f0', '#f0f000', '#a000f0', '#f0a000',
-            '#0000f0', '#00f000', '#f00000'
-        ];
-
-        class Piece {
-            constructor(shape, color) {
-                this.shape = shape;
-                this.color = color;
-                this.x = Math.floor(COLS / 2) - Math.floor(shape[0].length / 2);
-                this.y = 0;
-            }
-
-            draw(context, offsetX = 0, offsetY = 0, size = BLOCK_SIZE) {
-                this.shape.forEach((row, y) => {
-                    row.forEach((value, x) => {
-                        if (value) {
-                            context.fillStyle = this.color;
-                            context.fillRect(
-                                (this.x + x) * size + offsetX,
-                                (this.y + y) * size + offsetY,
-                                size - 1, size - 1
-                            );
-                        }
-                    });
-                });
-            }
-
-            rotate() {
-                const newShape = this.shape[0].map((_, i) =>
-                    this.shape.map(row => row[i]).reverse()
-                );
-                const oldShape = this.shape;
-                this.shape = newShape;
-                if (this.collides()) {
-                    this.shape = oldShape;
-                }
-            }
-
-            collides() {
-                return this.shape.some((row, dy) =>
-                    row.some((value, dx) => {
-                        if (!value) return false;
-                        const newX = this.x + dx;
-                        const newY = this.y + dy;
-                        return newX < 0 || newX >= COLS || newY >= ROWS ||
-                               (newY >= 0 && board[newY][newX]);
-                    })
-                );
-            }
-        }
-
-        function createPiece() {
-            const index = Math.floor(Math.random() * PIECES.length);
-            return new Piece(PIECES[index], COLORS[index]);
-        }
-
-        function drawBoard() {
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Change the currently viewed date
+        function changeDate(days) {
+            const currentDate = new Date(currentViewDate + 'T00:00:00');
+            currentDate.setDate(currentDate.getDate() + days);
             
-            board.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value) {
-                        ctx.fillStyle = value;
-                        ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE,
-                                   BLOCK_SIZE - 1, BLOCK_SIZE - 1);
-                    }
-                });
-            });
-
-            if (currentPiece) {
-                currentPiece.draw(ctx);
-            }
-        }
-
-        function drawNextPiece() {
-            nextCtx.fillStyle = '#000';
-            nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            currentViewDate = `${year}-${month}-${day}`;
             
-            if (nextPiece) {
-                const offsetX = (nextCanvas.width - nextPiece.shape[0].length * 16) / 2;
-                const offsetY = (nextCanvas.height - nextPiece.shape.length * 16) / 2;
-                
-                nextPiece.shape.forEach((row, y) => {
-                    row.forEach((value, x) => {
-                        if (value) {
-                            nextCtx.fillStyle = nextPiece.color;
-                            nextCtx.fillRect(x * 16 + offsetX, y * 16 + offsetY, 15, 15);
-                        }
-                    });
-                });
-            }
-        }
-
-        function merge() {
-            currentPiece.shape.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value) {
-                        if (currentPiece.y + y < 0) {
-                            gameOver();
-                            return;
-                        }
-                        board[currentPiece.y + y][currentPiece.x + x] = currentPiece.color;
-                    }
-                });
-            });
-        }
-
-        function clearLines() {
-            let linesCleared = 0;
-            outer: for (let y = ROWS - 1; y >= 0; y--) {
-                for (let x = 0; x < COLS; x++) {
-                    if (!board[y][x]) continue outer;
-                }
-                board.splice(y, 1);
-                board.unshift(Array(COLS).fill(0));
-                linesCleared++;
-                y++;
-            }
-            if (linesCleared > 0) {
-                score += linesCleared * 100 * level;
-                level = Math.floor(score / 1000) + 1;
-                dropInterval = 1000 - (level - 1) * 100;
-                if (dropInterval < 100) dropInterval = 100;
-                updateScore();
-            }
-        }
-
-        function updateScore() {
-            scoreEl.textContent = score;
-            levelEl.textContent = level;
-        }
-
-        function drop() {
-            currentPiece.y++;
-            if (currentPiece.collides()) {
-                currentPiece.y--;
-                merge();
-                clearLines();
-                currentPiece = nextPiece;
-                nextPiece = createPiece();
-                drawNextPiece();
-                if (currentPiece.collides()) {
-                    gameOver();
-                }
-            }
-        }
-
-        function move(dir) {
-            currentPiece.x += dir;
-            if (currentPiece.collides()) {
-                currentPiece.x -= dir;
-            }
-        }
-
-        function hardDrop() {
-            while (!currentPiece.collides()) {
-                currentPiece.y++;
-            }
-            currentPiece.y--;
-            merge();
-            clearLines();
-            currentPiece = nextPiece;
-            nextPiece = createPiece();
-            drawNextPiece();
-            if (currentPiece.collides()) {
-                gameOver();
-            }
-        }
-
-        function gameOver() {
-            gameRunning = false;
-            gameOverEl.style.display = 'block';
-            document.getElementById('finalScore').textContent = score;
-        }
-
-        function gameLoop(time = 0) {
-            if (!gameRunning || gamePaused) return;
-
-            const deltaTime = time - lastTime;
-            lastTime = time;
-            dropCounter += deltaTime;
-
-            if (dropCounter > dropInterval) {
-                drop();
-                dropCounter = 0;
-            }
-
-            drawBoard();
-            requestAnimationFrame(gameLoop);
-        }
-
-        function handleAction(action) {
-            if (!gameRunning || gamePaused) return;
-            
-            switch(action) {
-                case 'left':
-                    move(-1);
-                    break;
-                case 'right':
-                    move(1);
-                    break;
-                case 'down':
-                    drop();
-                    break;
-                case 'rotate':
-                    currentPiece.rotate();
-                    break;
-                case 'drop':
-                    hardDrop();
-                    break;
-            }
-            drawBoard();
-        }
-
-        function startGame() {
-            board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
-            score = 0;
-            level = 1;
-            dropInterval = 1000;
-            updateScore();
-            currentPiece = createPiece();
-            nextPiece = createPiece();
-            drawNextPiece();
-            gameRunning = true;
-            gamePaused = false;
-            gameOverEl.style.display = 'none';
-            startBtn.style.display = 'none';
-            pauseBtn.style.display = 'block';
-            restartBtn.style.display = 'block';
-            requestAnimationFrame(gameLoop);
-        }
-
-        // キーボード操作
-        document.addEventListener('keydown', e => {
-            if (!gameRunning || gamePaused) return;
-            
-            if (e.key === 'ArrowLeft') {
-                handleAction('left');
-            } else if (e.key === 'ArrowRight') {
-                handleAction('right');
-            } else if (e.key === 'ArrowDown') {
-                handleAction('down');
-            } else if (e.key === 'ArrowUp') {
-                handleAction('rotate');
-            } else if (e.key === ' ') {
-                e.preventDefault();
-                handleAction('drop');
-            }
-        });
-
-        // タッチ操作ボタン
-        document.getElementById('btnLeft').addEventListener('click', () => handleAction('left'));
-        document.getElementById('btnRight').addEventListener('click', () => handleAction('right'));
-        document.getElementById('btnDown').addEventListener('click', () => handleAction('down'));
-        document.getElementById('btnRotate').addEventListener('click', () => handleAction('rotate'));
-        document.getElementById('btnDrop').addEventListener('click', () => handleAction('drop'));
-
-        // スワイプ操作
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let touchEndX = 0;
-        let touchEndY = 0;
-
-        canvas.addEventListener('touchstart', e => {
-            e.preventDefault();
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, { passive: false });
-
-        canvas.addEventListener('touchend', e => {
-            e.preventDefault();
-            if (!gameRunning || gamePaused) return;
-            
-            touchEndX = e.changedTouches[0].screenX;
-            touchEndY = e.changedTouches[0].screenY;
-            
-            const diffX = touchEndX - touchStartX;
-            const diffY = touchEndY - touchStartY;
-            
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-                if (Math.abs(diffX) > 30) {
-                    if (diffX > 0) {
-                        handleAction('right');
-                    } else {
-                        handleAction('left');
-                    }
-                }
+            // Disable next button if viewing today or future
+            const today = getToday();
+            const nextBtn = document.getElementById('nextDayBtn');
+            if (currentViewDate >= today) {
+                currentViewDate = today;
+                nextBtn.disabled = true;
             } else {
-                if (Math.abs(diffY) > 30) {
-                    if (diffY > 0) {
-                        handleAction('down');
+                nextBtn.disabled = false;
+            }
+            
+            updateCurrentView();
+        }
+
+        async function updateCurrentView() {
+            document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
+            await renderChecklist();
+            await updateStats();
+        }
+
+        // Screen navigation
+        function showLoginScreen() {
+            document.getElementById('choiceScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        function showSignupScreen() {
+            document.getElementById('choiceScreen').classList.add('hidden');
+            document.getElementById('signupScreen').classList.remove('hidden');
+        }
+
+        function backToChoice() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('signupScreen').classList.add('hidden');
+            document.getElementById('choiceScreen').classList.remove('hidden');
+            // Clear error messages
+            document.getElementById('loginErrorMessage').style.display = 'none';
+            document.getElementById('signupErrorMessage').style.display = 'none';
+        }
+
+        // Initialize audio context
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Play success sound - more fun and upbeat
+        function playSuccessSound() {
+            initAudio();
+            
+            const now = audioContext.currentTime;
+            
+            // Create multiple oscillators for a richer sound
+            const frequencies = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            
+            frequencies.forEach((freq, index) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(freq, now + index * 0.08);
+                
+                gainNode.gain.setValueAtTime(0.15, now + index * 0.08);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + index * 0.08 + 0.3);
+                
+                oscillator.start(now + index * 0.08);
+                oscillator.stop(now + index * 0.08 + 0.3);
+            });
+        }
+
+        // Play sad sound for "no" buttons
+        function playSadSound() {
+            initAudio();
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Descending sad notes
+            oscillator.type = 'sine';
+            const now = audioContext.currentTime;
+            
+            oscillator.frequency.setValueAtTime(392.00, now); // G4
+            oscillator.frequency.setValueAtTime(349.23, now + 0.15); // F4
+            oscillator.frequency.setValueAtTime(293.66, now + 0.30); // D4
+            
+            gainNode.gain.setValueAtTime(0.2, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            
+            oscillator.start(now);
+            oscillator.stop(now + 0.5);
+        }
+
+        // Login functionality
+        document.getElementById('loginButton').addEventListener('click', async () => {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                alert('なまえとパスワードをにゅうりょくしてください');
+                return;
+            }
+
+            if (!window.storage) {
+                alert('ストレージきのうがつかえません');
+                return;
+            }
+
+            try {
+                const userKey = `user:${username}`;
+                let result;
+                
+                try {
+                    result = await window.storage.get(userKey);
+                } catch (getError) {
+                    result = null;
+                }
+                
+                if (result && result.value) {
+                    const userData = JSON.parse(result.value);
+                    if (userData.password === password) {
+                        loginUser(username);
                     } else {
-                        handleAction('rotate');
+                        showLoginError();
+                    }
+                } else {
+                    showLoginError();
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('ログインエラー: ' + error.message);
+            }
+        });
+
+        // Signup functionality
+        document.getElementById('signupButton').addEventListener('click', async () => {
+            const username = document.getElementById('signupUsername').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
+            
+            if (!username || !password || !passwordConfirm) {
+                showSignupError('すべてにゅうりょくしてください');
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                showSignupError('パスワードがちがいます');
+                return;
+            }
+
+            if (!window.storage) {
+                alert('ストレージきのうがつかえません');
+                return;
+            }
+
+            try {
+                const userKey = `user:${username}`;
+                let result;
+                
+                try {
+                    result = await window.storage.get(userKey);
+                } catch (getError) {
+                    result = null;
+                }
+                
+                if (result && result.value) {
+                    showSignupError('このなまえはすでにつかわれています');
+                    return;
+                }
+
+                await window.storage.set(userKey, JSON.stringify({ password }));
+                alert(`ようこそ、${username}さん！アカウントをつくりました！`);
+                loginUser(username);
+            } catch (error) {
+                console.error('Signup error:', error);
+                alert('アカウントさくせいエラー: ' + error.message);
+            }
+        });
+
+        function showLoginError() {
+            const errorMsg = document.getElementById('loginErrorMessage');
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        function showSignupError(message) {
+            const errorMsg = document.getElementById('signupErrorMessage');
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        function loginUser(username) {
+            currentUser = username;
+            document.getElementById('displayName').textContent = username;
+            document.getElementById('choiceScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('signupScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            init();
+        }
+
+        function logout() {
+            currentUser = null;
+            selectedDate = null;
+            document.getElementById('choiceScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('signupUsername').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupPasswordConfirm').value = '';
+        }
+
+        // Date modal functions
+        function openDateModal(date) {
+            selectedDate = date;
+            document.getElementById('modalDate').textContent = formatDate(date);
+            document.getElementById('dateModal').classList.remove('hidden');
+            renderModalChecklist();
+        }
+
+        function closeModal() {
+            document.getElementById('dateModal').classList.add('hidden');
+            selectedDate = null;
+            updateStats();
+        }
+
+        async function renderModalChecklist() {
+            const data = await loadDayData(selectedDate);
+            const checklistDiv = document.getElementById('modalChecklist');
+            
+            checklistDiv.innerHTML = questions.map(q => `
+                <div class="modal-checklist-item ${data[q.id] === true ? 'checked-yes' : data[q.id] === false ? 'checked-no' : ''}" id="modal-item-${q.id}">
+                    <div class="modal-item-question">${q.text}</div>
+                    <div class="modal-item-buttons">
+                        <button class="check-btn btn-yes ${data[q.id] === true ? 'selected' : ''}" 
+                                onclick="handleModalCheck('${q.id}', true)">
+                            ${q.yes}
+                        </button>
+                        <button class="check-btn btn-no ${data[q.id] === false ? 'selected' : ''}" 
+                                onclick="handleModalCheck('${q.id}', false)">
+                            ${q.no}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function handleModalCheck(questionId, isYes) {
+            // Prevent rapid clicking
+            const item = document.getElementById(`modal-item-${questionId}`);
+            if (item.classList.contains('celebrate')) {
+                return; // Already processing this click
+            }
+            
+            // Play sound and update UI immediately for fast response
+            if (isYes) {
+                playSuccessSound();
+            } else {
+                playSadSound();
+            }
+            
+            item.classList.add('celebrate');
+            setTimeout(() => item.classList.remove('celebrate'), 600);
+            
+            // Update data
+            const data = await loadDayData(selectedDate);
+            data[questionId] = isYes;
+            
+            // Save with retry logic
+            await saveDayData(selectedDate, data);
+            
+            // Re-render
+            await renderModalChecklist();
+            
+            // Update main checklist if editing the currently viewed date
+            if (selectedDate === currentViewDate) {
+                await renderChecklist();
+            }
+        }
+
+        function getToday() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const days = ['日', '月', '火', '水', '木', '金', '土'];
+            const dayOfWeek = days[date.getDay()];
+            return `${month}月${day}日（${dayOfWeek}）`;
+        }
+
+        async function loadDayData(date) {
+            if (!currentUser) return {};
+            try {
+                const result = await window.storage.get(`habits:${currentUser}:${date}`);
+                return result ? JSON.parse(result.value) : {};
+            } catch (error) {
+                return {};
+            }
+        }
+
+        async function saveDayData(date, data, retryCount = 0) {
+            if (!currentUser) return;
+            
+            // Prevent multiple simultaneous saves
+            if (isSaving && retryCount === 0) {
+                console.log('Already saving, queuing...');
+                await new Promise(resolve => setTimeout(resolve, 300));
+                return saveDayData(date, data, 0);
+            }
+            
+            isSaving = true;
+            
+            try {
+                const result = await window.storage.set(`habits:${currentUser}:${date}`, JSON.stringify(data));
+                isSaving = false;
+                
+                if (!result) {
+                    console.error('Storage set returned null');
+                    if (retryCount < 2) {
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        return saveDayData(date, data, retryCount + 1);
                     }
                 }
+                return result;
+            } catch (error) {
+                isSaving = false;
+                console.error('保存エラー:', error);
+                
+                // Retry up to 2 times with increasing delay
+                if (retryCount < 2) {
+                    const delay = (retryCount + 1) * 500;
+                    console.log(`Retrying in ${delay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return saveDayData(date, data, retryCount + 1);
+                }
+                
+                // After all retries failed, silently fail without breaking the app
+                console.error('All retry attempts failed');
             }
-        }, { passive: false });
+        }
 
-        startBtn.addEventListener('click', startGame);
-
-        pauseBtn.addEventListener('click', () => {
-            gamePaused = !gamePaused;
-            pauseBtn.textContent = gamePaused ? '再開' : '一時停止';
-            if (!gamePaused) {
-                lastTime = performance.now();
-                requestAnimationFrame(gameLoop);
+        async function getWeekData() {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0=Sunday, 1=Monday, etc.
+            const weekData = [];
+            
+            // Calculate days since Monday (0=Sunday needs special handling)
+            const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+            
+            // Get this week's data from Monday to today
+            for (let i = daysSinceMonday; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const dateStr = `${year}-${month}-${day}`;
+                
+                const data = await loadDayData(dateStr);
+                weekData.push({
+                    date: dateStr,
+                    data: Object.keys(data).length > 0 ? data : null
+                });
             }
+            
+            return weekData;
+        }
+
+        function calculateStats(weekData) {
+            let totalChecks = 0;
+            let yesChecks = 0;
+            let streak = 0;
+            let currentStreak = 0;
+
+            weekData.slice().reverse().forEach(day => {
+                if (day.data) {
+                    let dayYes = 0;
+                    questions.forEach(q => {
+                        if (day.data[q.id] !== undefined) {
+                            totalChecks++;
+                            if (day.data[q.id] === true) {
+                                yesChecks++;
+                                dayYes++;
+                            }
+                        }
+                    });
+                    
+                    if (dayYes === questions.length) {
+                        currentStreak++;
+                        streak = Math.max(streak, currentStreak);
+                    } else {
+                        currentStreak = 0;
+                    }
+                }
+            });
+
+            const percentage = totalChecks > 0 ? Math.round((yesChecks / totalChecks) * 100) : 0;
+            
+            return { percentage, streak, yesChecks, totalChecks };
+        }
+
+        async function renderChecklist() {
+            const data = await loadDayData(currentViewDate);
+            const checklistDiv = document.getElementById('checklist');
+            
+            checklistDiv.innerHTML = questions.map(q => `
+                <div class="checklist-item ${data[q.id] === true ? 'checked-yes' : data[q.id] === false ? 'checked-no' : ''}" id="item-${q.id}">
+                    <div class="item-question">${q.text}</div>
+                    <div class="item-buttons">
+                        <button class="check-btn btn-yes ${data[q.id] === true ? 'selected' : ''}" 
+                                onclick="handleCheck('${q.id}', true)">
+                            ${q.yes}
+                        </button>
+                        <button class="check-btn btn-no ${data[q.id] === false ? 'selected' : ''}" 
+                                onclick="handleCheck('${q.id}', false)">
+                            ${q.no}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function handleCheck(questionId, isYes) {
+            // Prevent rapid clicking
+            const item = document.getElementById(`item-${questionId}`);
+            if (item.classList.contains('celebrate')) {
+                return; // Already processing this click
+            }
+            
+            // Play sound and update UI immediately for fast response
+            if (isYes) {
+                playSuccessSound();
+            } else {
+                playSadSound();
+            }
+            
+            item.classList.add('celebrate');
+            setTimeout(() => item.classList.remove('celebrate'), 600);
+            
+            // Update data
+            const data = await loadDayData(currentViewDate);
+            data[questionId] = isYes;
+            
+            // Save with retry logic
+            await saveDayData(currentViewDate, data);
+            
+            // Re-render
+            await renderChecklist();
+            await updateStats();
+        }
+
+        async function updateStats() {
+            const weekData = await getWeekData();
+            const stats = calculateStats(weekData);
+            
+            // Always show today's actual data in stats, not the viewed date
+            const todayData = await loadDayData(getToday());
+            const todayYes = questions.filter(q => todayData[q.id] === true).length;
+
+            document.getElementById('weeklyPercentage').textContent = `${stats.percentage}%`;
+            document.getElementById('todayCount').textContent = `${todayYes}/5`;
+            document.getElementById('weekStreak').textContent = stats.streak;
+            
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${stats.percentage}%`;
+            progressFill.textContent = `${stats.percentage}%`;
+
+            const trophyDisplay = document.getElementById('trophyDisplay');
+            if (stats.percentage >= 80) {
+                trophyDisplay.innerHTML = '<div class="trophy">🏆 すごい！よくがんばったね！</div>';
+            } else if (stats.percentage >= 60) {
+                trophyDisplay.innerHTML = '<div class="trophy">⭐ いいちょうしだね！</div>';
+            } else {
+                trophyDisplay.innerHTML = '<div class="trophy">💪 がんばろう！</div>';
+            }
+
+            renderHistory(weekData);
+        }
+
+        async function renderHistory(weekData) {
+            if (!weekData) {
+                weekData = await getWeekData();
+            }
+            
+            const tbody = document.getElementById('historyBody');
+            tbody.innerHTML = weekData.map(day => {
+                const checks = questions.map(q => {
+                    const value = day.data ? day.data[q.id] : undefined;
+                    
+                    if (value === undefined) {
+                        return `<td>-</td>`;
+                    }
+                    return `<td><span class="check-mark ${value ? 'yes' : 'no'}">${value ? '⭕' : '❌'}</span></td>`;
+                }).join('');
+                
+                return `<tr><td class="date-cell" onclick="openDateModal('${day.date}')">${formatDate(day.date)}</td>${checks}</tr>`;
+            }).join('');
+        }
+
+        async function init() {
+            currentViewDate = getToday();
+            document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
+            
+            // Disable next button since we start at today
+            document.getElementById('nextDayBtn').disabled = true;
+            
+            await renderChecklist();
+            await updateStats();
+        }
+
+        // Go back to today's date
+        function goToToday() {
+            currentViewDate = getToday();
+            document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
+            document.getElementById('nextDayBtn').disabled = true;
+            updateCurrentView();
+        }
+
+        // Global functions
+        window.handleCheck = handleCheck;
+        window.handleModalCheck = handleModalCheck;
+        window.logout = logout;
+        window.openDateModal = openDateModal;
+        window.closeModal = closeModal;
+        window.showLoginScreen = showLoginScreen;
+        window.showSignupScreen = showSignupScreen;
+        window.backToChoice = backToChoice;
+        window.changeDate = changeDate;
+        window.goToToday = goToToday;
+
+        // Enter key support
+        document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') document.getElementById('loginButton').click();
         });
-
-        restartBtn.addEventListener('click', () => {
-            if (confirm('ゲームをやり直しますか？')) {
-                location.reload();
-            }
+        document.getElementById('signupPasswordConfirm').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') document.getElementById('signupButton').click();
         });
-
-        drawBoard();
-        drawNextPiece();
     </script>
 </body>
 </html>
