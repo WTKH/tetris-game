@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-
     :root{
       --primary:#FF6B9D;
       --secondary:#FFA07A;
@@ -18,8 +17,9 @@
       --bg:#FFF8E7;
       --card-bg:#FFFFFF;
       --shadow:rgba(255,107,157,0.2);
+      --neutral:#CBD5E1;
+      --neutral-text:#334155;
     }
-
     body{
       font-family:'M PLUS Rounded 1c',sans-serif;
       background:linear-gradient(135deg,#FFF8E7 0%,#FFE5EC 50%,#E5F3FF 100%);
@@ -28,7 +28,6 @@
       position:relative;
       overflow-x:hidden;
     }
-
     body::before{
       content:'';
       position:fixed;
@@ -47,14 +46,7 @@
       33%{transform:translate(30px,-30px) rotate(5deg);}
       66%{transform:translate(-20px,20px) rotate(-5deg);}
     }
-
-    .container{
-      max-width:900px;
-      margin:0 auto;
-      position:relative;
-      z-index:1;
-    }
-
+    .container{ max-width:900px; margin:0 auto; position:relative; z-index:1; }
     .login-container{
       max-width:450px;
       margin:80px auto;
@@ -65,11 +57,7 @@
       border:4px solid var(--primary);
       animation:fadeIn 0.6s ease-out;
     }
-    @keyframes fadeIn{
-      from{opacity:0; transform:scale(0.95);}
-      to{opacity:1; transform:scale(1);}
-    }
-
+    @keyframes fadeIn{ from{opacity:0; transform:scale(0.95);} to{opacity:1; transform:scale(1);} }
     .login-header{ text-align:center; margin-bottom:30px; }
     .login-header .emoji{ font-size:5rem; animation:bounce 2s ease-in-out infinite; }
     .login-header h2{ font-size:2rem; font-weight:900; color:var(--primary); margin-top:10px; }
@@ -78,12 +66,8 @@
       25%{transform:translateY(-10px) rotate(-5deg);}
       75%{transform:translateY(-5px) rotate(5deg);}
     }
-
     .form-group{ margin-bottom:18px; }
-    .form-group label{
-      display:block; font-size:1.1rem; font-weight:800;
-      color:#333; margin-bottom:8px;
-    }
+    .form-group label{ display:block; font-size:1.1rem; font-weight:800; color:#333; margin-bottom:8px; }
     .form-group input{
       width:100%;
       padding:14px 18px;
@@ -100,7 +84,6 @@
       box-shadow:0 0 0 4px rgba(255,107,157,0.2);
       transform:scale(1.01);
     }
-
     .login-btn{
       width:100%;
       padding:16px;
@@ -117,14 +100,7 @@
       margin-top:8px;
     }
     .login-btn:hover{ transform:translateY(-2px); box-shadow:0 8px 25px rgba(255,107,157,0.5); }
-
-    .error-message{
-      color:#ff4444;
-      font-weight:800;
-      text-align:center;
-      margin-top:12px;
-      display:none;
-    }
+    .error-message{ color:#ff4444; font-weight:800; text-align:center; margin-top:12px; display:none; }
 
     .user-info{
       display:flex; justify-content:space-between; align-items:center;
@@ -138,9 +114,8 @@
       gap:10px;
     }
     .user-name{ font-size:1.2rem; font-weight:800; color:var(--primary); }
-    .user-buttons{ display:flex; gap:10px; }
-
-    .logout-btn,.home-btn{
+    .user-buttons{ display:flex; gap:10px; flex-wrap:wrap; }
+    .logout-btn,.home-btn,.reset-btn{
       padding:10px 18px;
       border:none; border-radius:10px;
       font-size:1rem; font-weight:800;
@@ -152,6 +127,8 @@
     .logout-btn:hover{ transform:scale(1.04); box-shadow:0 3px 10px rgba(255,215,61,0.5); }
     .home-btn{ background:linear-gradient(135deg,var(--purple),var(--blue)); color:white; }
     .home-btn:hover{ transform:scale(1.04); box-shadow:0 3px 10px rgba(160,139,250,0.5); }
+    .reset-btn{ background:linear-gradient(135deg,#94A3B8,#CBD5E1); color:#0f172a; }
+    .reset-btn:hover{ transform:scale(1.04); box-shadow:0 3px 10px rgba(148,163,184,0.5); }
 
     .header{ text-align:center; margin:22px 0 24px; }
     .header .emoji{ font-size:4rem; display:inline-block; animation:bounce 2s ease-in-out infinite; }
@@ -162,7 +139,6 @@
       -webkit-text-fill-color:transparent;
       margin-top:8px;
     }
-
     .date-display{
       background:var(--card-bg);
       padding:18px;
@@ -196,7 +172,6 @@
       margin-bottom:22px;
       border:4px solid var(--success);
     }
-
     .checklist-item{
       display:flex; align-items:center; justify-content:space-between;
       padding:18px; margin-bottom:12px;
@@ -208,25 +183,26 @@
     .checklist-item:hover{ transform:translateX(4px); border-color:var(--primary); box-shadow:0 5px 15px rgba(255,107,157,0.2); }
     .checklist-item.checked-yes{ background:linear-gradient(135deg, rgba(78,205,196,0.2), rgba(96,165,250,0.2)); border-color:var(--success); }
     .checklist-item.checked-no{ background:linear-gradient(135deg, rgba(255,215,61,0.2), rgba(255,160,122,0.2)); border-color:var(--warning); }
-
     .item-question{ font-size:1.18rem; font-weight:800; color:#333; flex:1; }
-    .item-buttons{ display:flex; gap:10px; }
+    .item-buttons{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
 
     .check-btn{
-      padding:11px 20px;
+      padding:11px 18px;
       border:none; border-radius:50px;
       font-size:1.02rem; font-weight:800;
       font-family:'M PLUS Rounded 1c',sans-serif;
       cursor:pointer;
       transition:all 0.25s ease;
       box-shadow:0 4px 15px rgba(0,0,0,0.1);
+      white-space:nowrap;
     }
     .check-btn:hover{ transform:translateY(-2px) scale(1.03); box-shadow:0 6px 20px rgba(0,0,0,0.2); }
-
     .btn-yes{ background:linear-gradient(135deg,var(--success),var(--blue)); color:white; }
     .btn-yes.selected{ background:var(--success); box-shadow:0 0 0 4px rgba(78,205,196,0.3); }
     .btn-no{ background:linear-gradient(135deg,var(--warning),var(--secondary)); color:#333; }
     .btn-no.selected{ background:var(--warning); box-shadow:0 0 0 4px rgba(255,215,61,0.3); }
+    .btn-clear{ background:linear-gradient(135deg,var(--neutral),#E2E8F0); color:var(--neutral-text); }
+    .btn-clear.selected{ background:#E2E8F0; box-shadow:0 0 0 4px rgba(203,213,225,0.7); }
 
     .celebrate{ animation:celebrate 0.6s ease-out; }
     @keyframes celebrate{
@@ -242,10 +218,7 @@
       box-shadow:0 10px 40px var(--shadow);
       border:4px solid var(--purple);
     }
-    .stats-card h2{
-      font-size:1.9rem; font-weight:900; color:var(--purple);
-      margin-bottom:18px; text-align:center;
-    }
+    .stats-card h2{ font-size:1.9rem; font-weight:900; color:var(--purple); margin-bottom:18px; text-align:center; }
     .stats-grid{
       display:grid;
       grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
@@ -267,7 +240,6 @@
       margin-bottom:4px;
     }
     .stat-label{ font-size:1.05rem; font-weight:800; color:#666; }
-
     .progress-bar-container{
       margin-top:10px;
       padding:18px;
@@ -320,7 +292,6 @@
     .check-mark{ font-size:1.4rem; }
     .check-mark.yes{ color:var(--success); }
     .check-mark.no{ color:var(--warning); }
-
     .date-cell{
       cursor:pointer;
       transition:all 0.2s ease;
@@ -356,7 +327,6 @@
     .modal-header{ text-align:center; margin-bottom:18px; }
     .modal-header h2{ font-size:1.8rem; font-weight:900; color:var(--primary); margin-bottom:6px; }
     .modal-date{ font-size:1.2rem; font-weight:800; color:var(--purple); }
-
     .modal-checklist-item{
       display:flex; flex-direction:column;
       padding:16px;
@@ -375,7 +345,6 @@
     }
     .modal-item-question{ font-size:1.1rem; font-weight:800; color:#333; margin-bottom:12px; }
     .modal-item-buttons{ display:flex; gap:10px; flex-wrap:wrap; }
-
     .close-modal-btn{
       width:100%;
       padding:14px;
@@ -398,12 +367,13 @@
       .check-btn{ padding:10px 14px; font-size:0.92rem; }
       .login-container{ margin:50px 12px; padding:28px; }
       .modal-item-buttons{ flex-direction:column; }
+      .item-buttons{ justify-content:flex-start; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Login Screen -->
+  <!-- Login Screen（端末内だけの簡易ログイン：記録は同じ端末に保存） -->
   <div id="loginScreen" class="login-container">
     <div class="login-header">
       <div class="emoji">🔐</div>
@@ -411,11 +381,11 @@
     </div>
     <div class="form-group">
       <label for="loginName">なまえ</label>
-      <input type="text" id="loginName" autocomplete="username" placeholder="例：わかいかえで">
+      <input type="text" id="loginName" autocomplete="username">
     </div>
     <div class="form-group">
       <label for="loginDob">生年月日（8けた）</label>
-      <input type="password" id="loginDob" inputmode="numeric" autocomplete="current-password" placeholder="例：20160402">
+      <input type="password" id="loginDob" inputmode="numeric" autocomplete="current-password">
     </div>
 
     <button class="login-btn" id="loginButton">ログイン</button>
@@ -428,6 +398,7 @@
       <div class="user-name">👤 <span id="displayName"></span>さん</div>
       <div class="user-buttons">
         <button class="home-btn" onclick="goToToday()">🏠 きょうにもどる</button>
+        <button class="reset-btn" onclick="resetAllData()">🧹 ぜんぶけす</button>
         <button class="logout-btn" onclick="logout()">ログアウト</button>
       </div>
     </div>
@@ -502,14 +473,24 @@
 
 <script>
   /** =========================
-   *  設定（ここだけ最初に編集）
+   *  GitHub Pages版（端末内保存: localStorage）
+   *  - 記録はこの端末のブラウザに残ります
    * ========================= */
-  const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwdyFCu7JIYzVdmgl6rYZQa7OX4Kw9pJ1qth213bvE3vNiAVtfQ7AQQ1Gm4iFE_aNbHuA/exec';
 
+  // localStorage keys
+  const STORE_KEY = 'habit_single_user_store_v1';
+  const AUTH_KEY  = 'habit_single_user_auth_v1';
 
-  /** =========================
-   *  アプリ本体
-   * ========================= */
+  // ★項目7つ
+  const questions = [
+    { id: 'toilet',    text: 'おきたらトイレに行った？',     yes: 'いった！',       no: 'わすれた' },
+    { id: 'change',    text: '着がえた？',                   yes: 'きがえた！',     no: 'できなかった' },
+    { id: 'breakfast', text: '朝ごはんは時間までにたべた？', yes: 'たべた！',       no: 'たべられなかった' },
+    { id: 'study',     text: '朝学習はがんばった？',         yes: 'がんばった！',   no: 'できなかった' },
+    { id: 'jungle',    text: 'ジャングルジムはおりた？',     yes: 'おりた！',       no: 'おりなかった' },
+    { id: 'teacher',   text: '先生のお話はきいた？',         yes: 'きいた！',       no: 'できなかった' },
+    { id: 'friends',   text: 'お友だちにやさしくできた？',   yes: 'できた！',       no: 'できなかった' }
+  ];
 
   let audioContext;
   let currentUserName = null;
@@ -517,17 +498,7 @@
   let selectedDate = null;
   let currentViewDate = null;
 
-  // ★項目を7つに拡張
-  const questions = [
-    { id: 'toilet',   text: 'おきたらトイレに行った？',     yes: 'いった！',       no: 'わすれた' },
-    { id: 'change',   text: '着がえた？',                   yes: 'きがえた！',     no: 'できなかった' },
-    { id: 'breakfast',text: '朝ごはんは時間までにたべた？', yes: 'たべた！',       no: 'たべられなかった' },
-    { id: 'study',    text: '朝学習はがんばった？',         yes: 'がんばった！',   no: 'できなかった' },
-    { id: 'jungle',   text: 'ジャングルジムはおりた？',     yes: 'おりた！',       no: 'おりなかった' },
-    { id: 'teacher',  text: '先生のお話はきいた？',         yes: 'きいた！',       no: 'できなかった' },
-    { id: 'friends',  text: 'お友だちにやさしくできた？',   yes: 'できた！',       no: 'できなかった' }
-  ];
-
+  // ===== Sound =====
   function initAudio() {
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
@@ -562,6 +533,7 @@
     o.start(now); o.stop(now + 0.5);
   }
 
+  // ===== UI helpers =====
   function showError(msg) {
     const el = document.getElementById('loginError');
     el.textContent = msg;
@@ -569,53 +541,6 @@
     setTimeout(() => el.style.display = 'none', 3000);
   }
 
-  async function apiAuth(name, dob) {
-    const res = await fetch(GAS_WEBAPP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'auth', name, dob })
-    });
-    const json = await res.json();
-    return json.ok === true;
-  }
-
-  async function apiGetDay(date) {
-    const url = new URL(GAS_WEBAPP_URL);
-    url.searchParams.set('action', 'get');
-    url.searchParams.set('name', currentUserName);
-    url.searchParams.set('dob', currentUserDob);
-    url.searchParams.set('date', date);
-
-    const res = await fetch(url.toString(), { method: 'GET' });
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || 'get failed');
-    return json.data || {};
-  }
-
-  async function apiSetDay(date, data) {
-    const res = await fetch(GAS_WEBAPP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'set', name: currentUserName, dob: currentUserDob, date, data })
-    });
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || 'set failed');
-    return true;
-  }
-
-  async function apiGetAll() {
-    const url = new URL(GAS_WEBAPP_URL);
-    url.searchParams.set('action', 'getall');
-    url.searchParams.set('name', currentUserName);
-    url.searchParams.set('dob', currentUserDob);
-
-    const res = await fetch(url.toString(), { method: 'GET' });
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || 'getall failed');
-    return json.data || {};
-  }
-
-  /** 日付系 */
   function getToday() {
     const t = new Date();
     const y = t.getFullYear();
@@ -631,7 +556,281 @@
     return `${month}月${day}日（${days[date.getDay()]}）`;
   }
 
-  /** UI：日付移動 */
+  // ===== localStorage store =====
+  function safeParseJSON(text, fallback) {
+    try {
+      const parsed = JSON.parse(text);
+      return (parsed && typeof parsed === 'object') ? parsed : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function loadStore() {
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? safeParseJSON(raw, {}) : {};
+  }
+  function saveStore(store) {
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
+  }
+
+  function loadAuth() {
+    const raw = localStorage.getItem(AUTH_KEY);
+    return raw ? safeParseJSON(raw, null) : null;
+  }
+  function saveAuth(name, dob) {
+    localStorage.setItem(AUTH_KEY, JSON.stringify({ name, dob }));
+  }
+  function clearAuth() {
+    localStorage.removeItem(AUTH_KEY);
+  }
+
+  // ===== “認証” =====
+  // GitHub Pages版はサーバー認証できないので、端末内だけの簡易ログインです。
+  // ここでは「空でなければOK」にして、入力値は端末内にだけ保存します。
+  function isAuthorizedLocal(name, dob) {
+    return !!name && /^\d{8}$/.test(dob);
+  }
+
+  // ===== Data APIs (local) =====
+  async function apiAuth(name, dob) {
+    return isAuthorizedLocal(name, dob);
+  }
+  async function apiGetDay(date) {
+    const store = loadStore();
+    return store[date] || {};
+  }
+  async function apiSetDay(date, data) {
+    const store = loadStore();
+    store[date] = data;
+    saveStore(store);
+    return true;
+  }
+  async function apiGetAll() {
+    return loadStore();
+  }
+
+  // ===== Checklist render =====
+  function computeRowClass(v){
+    if (v === true) return 'checked-yes';
+    if (v === false) return 'checked-no';
+    return '';
+  }
+
+  async function renderChecklist() {
+    const data = await apiGetDay(currentViewDate);
+    const checklistDiv = document.getElementById('checklist');
+
+    checklistDiv.innerHTML = questions.map(q => {
+      const v = data[q.id];
+      return `
+      <div class="checklist-item ${computeRowClass(v)}" id="item-${q.id}">
+        <div class="item-question">${q.text}</div>
+        <div class="item-buttons">
+          <button class="check-btn btn-yes ${v === true ? 'selected' : ''}" onclick="handleCheck('${q.id}', true)">${q.yes}</button>
+          <button class="check-btn btn-no  ${v === false ? 'selected' : ''}" onclick="handleCheck('${q.id}', false)">${q.no}</button>
+          <button class="check-btn btn-clear ${v === undefined ? 'selected' : ''}" onclick="handleCheck('${q.id}', null)">とりけす</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function handleCheck(questionId, value) {
+    const item = document.getElementById(`item-${questionId}`);
+    if (item && item.classList.contains('celebrate')) return;
+
+    if (value === true) playSuccessSound();
+    else if (value === false) playSadSound();
+
+    if (item) {
+      item.classList.add('celebrate');
+      setTimeout(() => item.classList.remove('celebrate'), 600);
+    }
+
+    const data = await apiGetDay(currentViewDate);
+
+    if (value === null) {
+      delete data[questionId]; // 未回答に戻す
+    } else {
+      data[questionId] = value;
+    }
+
+    await apiSetDay(currentViewDate, data);
+
+    await renderChecklist();
+    await updateStats();
+  }
+
+  // ===== Week stats =====
+  async function getWeekDates() {
+    const today = new Date();
+    const dow = today.getDay();
+    const daysSinceMonday = (dow === 0) ? 6 : (dow - 1);
+
+    const dates = [];
+    for (let i = daysSinceMonday; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      dates.push(`${y}-${m}-${dd}`);
+    }
+    return dates;
+  }
+
+  function calculateStats(weekData) {
+    let totalChecks = 0;
+    let yesChecks = 0;
+    let streak = 0;
+    let currentStreak = 0;
+
+    [...weekData].reverse().forEach(day => {
+      const data = day.data;
+      if (data && Object.keys(data).length > 0) {
+        let dayYes = 0;
+        let answered = 0;
+
+        questions.forEach(q => {
+          if (data[q.id] !== undefined) {
+            totalChecks++;
+            answered++;
+            if (data[q.id] === true) {
+              yesChecks++;
+              dayYes++;
+            }
+          }
+        });
+
+        if (answered === questions.length && dayYes === questions.length) {
+          currentStreak++;
+          streak = Math.max(streak, currentStreak);
+        } else {
+          currentStreak = 0;
+        }
+      }
+    });
+
+    const percentage = totalChecks > 0 ? Math.round((yesChecks / totalChecks) * 100) : 0;
+    return { percentage, streak };
+  }
+
+  async function updateStats() {
+    const all = await apiGetAll();
+    const weekDates = await getWeekDates();
+
+    const weekData = weekDates.map(date => ({ date, data: all[date] || null }));
+    const stats = calculateStats(weekData);
+
+    const todayStr = getToday();
+    const todayData = all[todayStr] || {};
+    const todayYes = questions.filter(q => todayData[q.id] === true).length;
+
+    document.getElementById('weeklyPercentage').textContent = `${stats.percentage}%`;
+    document.getElementById('todayCount').textContent = `${todayYes}/${questions.length}`;
+    document.getElementById('weekStreak').textContent = `${stats.streak}`;
+
+    const progressFill = document.getElementById('progressFill');
+    progressFill.style.width = `${stats.percentage}%`;
+    progressFill.textContent = `${stats.percentage}%`;
+
+    const trophyDisplay = document.getElementById('trophyDisplay');
+    if (stats.percentage >= 80) trophyDisplay.innerHTML = '<div class="trophy">🏆 すごい！よくがんばったね！</div>';
+    else if (stats.percentage >= 60) trophyDisplay.innerHTML = '<div class="trophy">⭐ いいちょうしだね！</div>';
+    else trophyDisplay.innerHTML = '<div class="trophy">💪 がんばろう！</div>';
+
+    renderHistoryHeader();
+    renderHistory(weekData);
+  }
+
+  function renderHistoryHeader() {
+    const row = document.getElementById('historyHeaderRow');
+    const headers = ['日づけ', ...questions.map(q => {
+      if (q.id === 'toilet') return 'トイレ';
+      if (q.id === 'change') return '着がえ';
+      if (q.id === 'breakfast') return 'あさごはん';
+      if (q.id === 'study') return 'あさがくしゅう';
+      if (q.id === 'jungle') return 'ジャングルジム';
+      if (q.id === 'teacher') return 'おはなし';
+      if (q.id === 'friends') return 'おともだち';
+      return q.id;
+    })];
+    row.innerHTML = headers.map(h => `<th>${h}</th>`).join('');
+  }
+
+  function renderHistory(weekData) {
+    const tbody = document.getElementById('historyBody');
+    tbody.innerHTML = weekData.map(day => {
+      const cells = questions.map(q => {
+        const v = day.data ? day.data[q.id] : undefined;
+        if (v === undefined) return `<td>-</td>`;
+        return `<td><span class="check-mark ${v ? 'yes' : 'no'}">${v ? '⭕' : '❌'}</span></td>`;
+      }).join('');
+      return `<tr>
+        <td class="date-cell" onclick="openDateModal('${day.date}')">${formatDate(day.date)}</td>
+        ${cells}
+      </tr>`;
+    }).join('');
+  }
+
+  // ===== Modal =====
+  function openDateModal(date) {
+    selectedDate = date;
+    document.getElementById('modalDate').textContent = formatDate(date);
+    document.getElementById('dateModal').classList.remove('hidden');
+    renderModalChecklist();
+  }
+  function closeModal() {
+    document.getElementById('dateModal').classList.add('hidden');
+    selectedDate = null;
+    updateStats();
+  }
+
+  async function renderModalChecklist() {
+    const data = await apiGetDay(selectedDate);
+    const checklistDiv = document.getElementById('modalChecklist');
+
+    checklistDiv.innerHTML = questions.map(q => {
+      const v = data[q.id];
+      return `
+      <div class="modal-checklist-item ${computeRowClass(v)}" id="modal-item-${q.id}">
+        <div class="modal-item-question">${q.text}</div>
+        <div class="modal-item-buttons">
+          <button class="check-btn btn-yes ${v === true ? 'selected' : ''}" onclick="handleModalCheck('${q.id}', true)">${q.yes}</button>
+          <button class="check-btn btn-no  ${v === false ? 'selected' : ''}" onclick="handleModalCheck('${q.id}', false)">${q.no}</button>
+          <button class="check-btn btn-clear ${v === undefined ? 'selected' : ''}" onclick="handleModalCheck('${q.id}', null)">とりけす</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function handleModalCheck(questionId, value) {
+    const item = document.getElementById(`modal-item-${questionId}`);
+    if (item && item.classList.contains('celebrate')) return;
+
+    if (value === true) playSuccessSound();
+    else if (value === false) playSadSound();
+
+    if (item) {
+      item.classList.add('celebrate');
+      setTimeout(() => item.classList.remove('celebrate'), 600);
+    }
+
+    const data = await apiGetDay(selectedDate);
+
+    if (value === null) {
+      delete data[questionId];
+    } else {
+      data[questionId] = value;
+    }
+
+    await apiSetDay(selectedDate, data);
+
+    await renderModalChecklist();
+    if (selectedDate === currentViewDate) await renderChecklist();
+  }
+
+  // ===== Date navigation =====
   function changeDate(days) {
     const cd = new Date(currentViewDate + 'T00:00:00');
     cd.setDate(cd.getDate() + days);
@@ -657,210 +856,6 @@
     await updateStats();
   }
 
-  /** チェックリスト表示 */
-  async function renderChecklist() {
-    const data = await apiGetDay(currentViewDate);
-    const checklistDiv = document.getElementById('checklist');
-
-    checklistDiv.innerHTML = questions.map(q => `
-      <div class="checklist-item ${data[q.id] === true ? 'checked-yes' : data[q.id] === false ? 'checked-no' : ''}" id="item-${q.id}">
-        <div class="item-question">${q.text}</div>
-        <div class="item-buttons">
-          <button class="check-btn btn-yes ${data[q.id] === true ? 'selected' : ''}" onclick="handleCheck('${q.id}', true)">${q.yes}</button>
-          <button class="check-btn btn-no  ${data[q.id] === false ? 'selected' : ''}" onclick="handleCheck('${q.id}', false)">${q.no}</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  async function handleCheck(questionId, isYes) {
-    const item = document.getElementById(`item-${questionId}`);
-    if (item.classList.contains('celebrate')) return;
-
-    if (isYes) playSuccessSound(); else playSadSound();
-    item.classList.add('celebrate');
-    setTimeout(() => item.classList.remove('celebrate'), 600);
-
-    const data = await apiGetDay(currentViewDate);
-    data[questionId] = isYes;
-    await apiSetDay(currentViewDate, data);
-
-    await renderChecklist();
-    await updateStats();
-  }
-
-  /** 週データ（月曜始まり） */
-  async function getWeekDates() {
-    const today = new Date();
-    const dow = today.getDay(); // 0=日
-    const daysSinceMonday = (dow === 0) ? 6 : (dow - 1);
-
-    const dates = [];
-    for (let i = daysSinceMonday; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,'0');
-      const dd = String(d.getDate()).padStart(2,'0');
-      dates.push(`${y}-${m}-${dd}`);
-    }
-    return dates;
-  }
-
-  function calculateStats(weekData) {
-    let totalChecks = 0;
-    let yesChecks = 0;
-    let streak = 0;
-    let currentStreak = 0;
-
-    // 直近→過去に見て「全項目YES」を連続カウント
-    [...weekData].reverse().forEach(day => {
-      const data = day.data;
-      if (data && Object.keys(data).length > 0) {
-        let dayYes = 0;
-        let answered = 0;
-
-        questions.forEach(q => {
-          if (data[q.id] !== undefined) {
-            totalChecks++;
-            answered++;
-            if (data[q.id] === true) {
-              yesChecks++;
-              dayYes++;
-            }
-          }
-        });
-
-        // “全項目に回答”かつ“全項目YES”の日だけ連続対象
-        if (answered === questions.length && dayYes === questions.length) {
-          currentStreak++;
-          streak = Math.max(streak, currentStreak);
-        } else {
-          currentStreak = 0;
-        }
-      }
-    });
-
-    const percentage = totalChecks > 0 ? Math.round((yesChecks / totalChecks) * 100) : 0;
-    return { percentage, streak };
-  }
-
-  async function updateStats() {
-    const all = await apiGetAll();
-    const weekDates = await getWeekDates();
-
-    const weekData = weekDates.map(date => ({
-      date,
-      data: all[date] || null
-    }));
-
-    const stats = calculateStats(weekData);
-
-    const todayStr = getToday();
-    const todayData = all[todayStr] || {};
-    const todayYes = questions.filter(q => todayData[q.id] === true).length;
-
-    document.getElementById('weeklyPercentage').textContent = `${stats.percentage}%`;
-    document.getElementById('todayCount').textContent = `${todayYes}/${questions.length}`;
-    document.getElementById('weekStreak').textContent = `${stats.streak}`;
-
-    const progressFill = document.getElementById('progressFill');
-    progressFill.style.width = `${stats.percentage}%`;
-    progressFill.textContent = `${stats.percentage}%`;
-
-    const trophyDisplay = document.getElementById('trophyDisplay');
-    if (stats.percentage >= 80) {
-      trophyDisplay.innerHTML = '<div class="trophy">🏆 すごい！よくがんばったね！</div>';
-    } else if (stats.percentage >= 60) {
-      trophyDisplay.innerHTML = '<div class="trophy">⭐ いいちょうしだね！</div>';
-    } else {
-      trophyDisplay.innerHTML = '<div class="trophy">💪 がんばろう！</div>';
-    }
-
-    renderHistoryHeader();
-    renderHistory(weekData);
-  }
-
-  function renderHistoryHeader() {
-    const row = document.getElementById('historyHeaderRow');
-    const headers = ['日づけ', ...questions.map(q => {
-      // 表は短くしたいので、軽いラベルに
-      if (q.id === 'toilet') return 'トイレ';
-      if (q.id === 'change') return '着がえ';
-      if (q.id === 'breakfast') return 'あさごはん';
-      if (q.id === 'study') return 'あさがくしゅう';
-      if (q.id === 'jungle') return 'ジャングルジム';
-      if (q.id === 'teacher') return 'おはなし';
-      if (q.id === 'friends') return 'おともだち';
-      return q.id;
-    })];
-
-    row.innerHTML = headers.map(h => `<th>${h}</th>`).join('');
-  }
-
-  function renderHistory(weekData) {
-    const tbody = document.getElementById('historyBody');
-
-    tbody.innerHTML = weekData.map(day => {
-      const cells = questions.map(q => {
-        const v = day.data ? day.data[q.id] : undefined;
-        if (v === undefined) return `<td>-</td>`;
-        return `<td><span class="check-mark ${v ? 'yes' : 'no'}">${v ? '⭕' : '❌'}</span></td>`;
-      }).join('');
-
-      return `<tr>
-        <td class="date-cell" onclick="openDateModal('${day.date}')">${formatDate(day.date)}</td>
-        ${cells}
-      </tr>`;
-    }).join('');
-  }
-
-  /** Modal（過去の日付編集） */
-  function openDateModal(date) {
-    selectedDate = date;
-    document.getElementById('modalDate').textContent = formatDate(date);
-    document.getElementById('dateModal').classList.remove('hidden');
-    renderModalChecklist();
-  }
-
-  function closeModal() {
-    document.getElementById('dateModal').classList.add('hidden');
-    selectedDate = null;
-    updateStats();
-  }
-
-  async function renderModalChecklist() {
-    const data = await apiGetDay(selectedDate);
-    const checklistDiv = document.getElementById('modalChecklist');
-
-    checklistDiv.innerHTML = questions.map(q => `
-      <div class="modal-checklist-item ${data[q.id] === true ? 'checked-yes' : data[q.id] === false ? 'checked-no' : ''}" id="modal-item-${q.id}">
-        <div class="modal-item-question">${q.text}</div>
-        <div class="modal-item-buttons">
-          <button class="check-btn btn-yes ${data[q.id] === true ? 'selected' : ''}" onclick="handleModalCheck('${q.id}', true)">${q.yes}</button>
-          <button class="check-btn btn-no  ${data[q.id] === false ? 'selected' : ''}" onclick="handleModalCheck('${q.id}', false)">${q.no}</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  async function handleModalCheck(questionId, isYes) {
-    const item = document.getElementById(`modal-item-${questionId}`);
-    if (item.classList.contains('celebrate')) return;
-
-    if (isYes) playSuccessSound(); else playSadSound();
-    item.classList.add('celebrate');
-    setTimeout(() => item.classList.remove('celebrate'), 600);
-
-    const data = await apiGetDay(selectedDate);
-    data[questionId] = isYes;
-    await apiSetDay(selectedDate, data);
-
-    await renderModalChecklist();
-    if (selectedDate === currentViewDate) await renderChecklist();
-  }
-
-  /** 今日に戻る */
   function goToToday() {
     currentViewDate = getToday();
     document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
@@ -868,17 +863,28 @@
     updateCurrentView();
   }
 
+  // ===== Logout / Reset =====
   function logout() {
     currentUserName = null;
     currentUserDob = null;
     selectedDate = null;
     currentViewDate = null;
+    clearAuth();
+
     document.getElementById('mainApp').classList.add('hidden');
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('loginName').value = '';
     document.getElementById('loginDob').value = '';
   }
 
+  function resetAllData() {
+    const ok = confirm('きろくをぜんぶけします。いい？');
+    if (!ok) return;
+    localStorage.removeItem(STORE_KEY);
+    updateCurrentView();
+  }
+
+  // ===== App start =====
   async function initAppAfterLogin() {
     document.getElementById('displayName').textContent = currentUserName;
     document.getElementById('loginScreen').classList.add('hidden');
@@ -892,45 +898,44 @@
     await updateStats();
   }
 
-  /** ログインボタン */
+  // login
   document.getElementById('loginButton').addEventListener('click', async () => {
     const name = document.getElementById('loginName').value.trim();
     const dob  = document.getElementById('loginDob').value.trim();
 
-    if (!GAS_WEBAPP_URL || GAS_WEBAPP_URL.includes('PASTE_YOUR_GAS_WEBAPP_URL')) {
-      showError('まずGASのURLを設定してね');
-      return;
-    }
-    if (!name || !dob) {
-      showError('なまえと生年月日をにゅうりょくしてね');
-      return;
-    }
-    if (!/^\d{8}$/.test(dob)) {
-      showError('生年月日は 8けた（YYYYMMDD）でいれてね');
-      return;
-    }
+    if (!name || !dob) { showError('なまえと生年月日をにゅうりょくしてね'); return; }
+    if (!/^\d{8}$/.test(dob)) { showError('生年月日は 8けた（YYYYMMDD）でいれてね'); return; }
 
     try {
       const ok = await apiAuth(name, dob);
-      if (!ok) {
-        showError('なまえか生年月日がちがいます');
-        return;
-      }
+      if (!ok) { showError('なまえか生年月日がちがいます'); return; }
+
       currentUserName = name;
       currentUserDob  = dob;
+      saveAuth(name, dob);
       await initAppAfterLogin();
     } catch (e) {
       console.error(e);
-      showError('通信エラー（URLや公開設定を確認）');
+      showError('エラーが出たよ（ブラウザをさいきどうしてね）');
     }
   });
 
-  // Enterキーでログイン
   document.getElementById('loginDob').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') document.getElementById('loginButton').click();
   });
 
-  // グローバル公開
+  // auto login (if previously saved on this device)
+  (function autoLogin(){
+    const auth = loadAuth();
+    if (!auth) return;
+    if (!isAuthorizedLocal(auth.name, auth.dob)) return;
+
+    currentUserName = auth.name;
+    currentUserDob  = auth.dob;
+    initAppAfterLogin();
+  })();
+
+  // expose
   window.handleCheck = handleCheck;
   window.handleModalCheck = handleModalCheck;
   window.logout = logout;
@@ -938,6 +943,7 @@
   window.closeModal = closeModal;
   window.changeDate = changeDate;
   window.goToToday = goToToday;
+  window.resetAllData = resetAllData;
 </script>
 </body>
 </html>
