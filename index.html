@@ -1,1380 +1,943 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>まいにちのおやくそくチェック！</title>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #FF6B9D;
-            --secondary: #FFA07A;
-            --success: #4ECDC4;
-            --warning: #FFD93D;
-            --purple: #A78BFA;
-            --blue: #60A5FA;
-            --bg: #FFF8E7;
-            --card-bg: #FFFFFF;
-            --shadow: rgba(255, 107, 157, 0.2);
-        }
-
-        body {
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            background: linear-gradient(135deg, #FFF8E7 0%, #FFE5EC 50%, #E5F3FF 100%);
-            min-height: 100vh;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(160, 139, 250, 0.1) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -30px) rotate(5deg); }
-            66% { transform: translate(-20px, 20px) rotate(-5deg); }
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: slideDown 0.8s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--purple), var(--success));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            animation: rainbow 3s ease-in-out infinite;
-        }
-
-        @keyframes rainbow {
-            0%, 100% { filter: hue-rotate(0deg); }
-            50% { filter: hue-rotate(20deg); }
-        }
-
-        .header .emoji {
-            font-size: 4rem;
-            display: inline-block;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-10px) rotate(-5deg); }
-            75% { transform: translateY(-5px) rotate(5deg); }
-        }
-
-        /* Login Screen Styles */
-        .login-container {
-            max-width: 450px;
-            margin: 100px auto;
-            background: var(--card-bg);
-            padding: 50px;
-            border-radius: 30px;
-            box-shadow: 0 15px 50px var(--shadow);
-            border: 4px solid var(--primary);
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .login-header .emoji {
-            font-size: 5rem;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        .login-header h2 {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin-top: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 3px solid var(--success);
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2);
-            transform: scale(1.02);
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--primary), var(--purple));
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.3rem;
-            font-weight: 900;
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
-            margin-top: 10px;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.5);
-        }
-
-        .login-btn:active {
-            transform: translateY(-1px);
-        }
-
-        .error-message {
-            color: #ff4444;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .user-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 15px 25px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px var(--shadow);
-            border: 3px solid var(--success);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .user-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .user-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .logout-btn, .home-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn {
-            background: var(--warning);
-            color: #333;
-        }
-
-        .logout-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 3px 10px rgba(255, 215, 61, 0.5);
-        }
-
-        .home-btn {
-            background: linear-gradient(135deg, var(--purple), var(--blue));
-            color: white;
-        }
-
-        .home-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 3px 10px rgba(160, 139, 250, 0.5);
-        }
-
-        .date-display {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px var(--shadow);
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            border: 3px solid var(--warning);
-            animation: fadeIn 1s ease-out 0.2s both;
-        }
-
-        .date-nav-btn {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, var(--success), var(--blue));
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: 700;
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(78, 205, 196, 0.3);
-        }
-
-        .date-nav-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
-        }
-
-        .date-nav-btn:active {
-            transform: translateY(0);
-        }
-
-        .date-nav-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .current-date {
-            flex: 1;
-            text-align: center;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .checklist-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 10px 40px var(--shadow);
-            margin-bottom: 30px;
-            border: 4px solid var(--success);
-            animation: fadeIn 1s ease-out 0.4s both;
-        }
-
-        .checklist-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), rgba(78, 205, 196, 0.05));
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .checklist-item:hover {
-            transform: translateX(5px);
-            border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
-        }
-
-        .checklist-item.checked-yes {
-            background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(96, 165, 250, 0.2));
-            border-color: var(--success);
-        }
-
-        .checklist-item.checked-no {
-            background: linear-gradient(135deg, rgba(255, 215, 61, 0.2), rgba(255, 160, 122, 0.2));
-            border-color: var(--warning);
-        }
-
-        .item-question {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #333;
-            flex: 1;
-        }
-
-        .item-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .check-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .check-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-        }
-
-        .check-btn:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        .btn-yes {
-            background: linear-gradient(135deg, var(--success), var(--blue));
-            color: white;
-        }
-
-        .btn-yes.selected {
-            background: var(--success);
-            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.3);
-        }
-
-        .btn-no {
-            background: linear-gradient(135deg, var(--warning), var(--secondary));
-            color: #333;
-        }
-
-        .btn-no.selected {
-            background: var(--warning);
-            box-shadow: 0 0 0 4px rgba(255, 215, 61, 0.3);
-        }
-
-        .stats-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 10px 40px var(--shadow);
-            border: 4px solid var(--purple);
-            animation: fadeIn 1s ease-out 0.6s both;
-        }
-
-        .stats-card h2 {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--purple);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 20px;
-            border-radius: 15px;
-            background: linear-gradient(135deg, rgba(160, 139, 250, 0.1), rgba(255, 107, 157, 0.1));
-            border: 2px solid var(--purple);
-        }
-
-        .stat-value {
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #666;
-        }
-
-        .history-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
-
-        .history-table th {
-            background: linear-gradient(135deg, var(--primary), var(--purple));
-            color: white;
-            padding: 15px;
-            font-weight: 900;
-            font-size: 1.1rem;
-            border-radius: 10px;
-        }
-
-        .history-table td {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            text-align: center;
-            font-weight: 700;
-            border-bottom: 2px solid rgba(160, 139, 250, 0.2);
-        }
-
-        .history-table tr:hover td {
-            background: rgba(160, 139, 250, 0.1);
-        }
-
-        .check-mark {
-            font-size: 1.5rem;
-        }
-
-        .check-mark.yes {
-            color: var(--success);
-        }
-
-        .check-mark.no {
-            color: var(--warning);
-        }
-
-        .progress-bar-container {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 15px;
-        }
-
-        .progress-label {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .progress-bar {
-            height: 40px;
-            background: rgba(200, 200, 200, 0.3);
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--success), var(--blue), var(--purple));
-            border-radius: 20px;
-            transition: width 0.8s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 900;
-            font-size: 1.2rem;
-            box-shadow: 0 2px 10px rgba(78, 205, 196, 0.5);
-        }
-
-        .celebrate {
-            animation: celebrate 0.6s ease-out;
-        }
-
-        @keyframes celebrate {
-            0%, 100% { transform: scale(1); }
-            25% { transform: scale(1.1) rotate(-5deg); }
-            75% { transform: scale(1.1) rotate(5deg); }
-        }
-
-        .trophy {
-            font-size: 3rem;
-            text-align: center;
-            margin: 20px 0;
-            animation: spin 2s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(10deg) scale(1.1); }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Date Selection Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 25px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            border: 4px solid var(--primary);
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .modal-header h2 {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .modal-date {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--purple);
-        }
-
-        .modal-checklist-item {
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), rgba(78, 205, 196, 0.05));
-            border: 2px solid transparent;
-        }
-
-        .modal-checklist-item.checked-yes {
-            background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(96, 165, 250, 0.2));
-            border-color: var(--success);
-        }
-
-        .modal-checklist-item.checked-no {
-            background: linear-gradient(135deg, rgba(255, 215, 61, 0.2), rgba(255, 160, 122, 0.2));
-            border-color: var(--warning);
-        }
-
-        .modal-item-question {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .modal-item-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .close-modal-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--purple);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .close-modal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(160, 139, 250, 0.4);
-        }
-
-        .history-table td.date-cell {
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 900;
-        }
-
-        .history-table td.date-cell:hover {
-            background: rgba(255, 107, 157, 0.2);
-            transform: scale(1.05);
-            color: var(--primary);
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .item-question {
-                font-size: 1.1rem;
-            }
-            
-            .check-btn {
-                padding: 10px 16px;
-                font-size: 0.9rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .login-container {
-                margin: 50px 20px;
-                padding: 30px;
-            }
-
-            .modal-content {
-                padding: 25px;
-                width: 95%;
-            }
-
-            .modal-item-buttons {
-                flex-direction: column;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>まいにちのおやくそくチェック！</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    :root{
+      --primary:#FF6B9D;
+      --secondary:#FFA07A;
+      --success:#4ECDC4;
+      --warning:#FFD93D;
+      --purple:#A78BFA;
+      --blue:#60A5FA;
+      --bg:#FFF8E7;
+      --card-bg:#FFFFFF;
+      --shadow:rgba(255,107,157,0.2);
+    }
+
+    body{
+      font-family:'M PLUS Rounded 1c',sans-serif;
+      background:linear-gradient(135deg,#FFF8E7 0%,#FFE5EC 50%,#E5F3FF 100%);
+      min-height:100vh;
+      padding:20px;
+      position:relative;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:'';
+      position:fixed;
+      top:-50%; left:-50%;
+      width:200%; height:200%;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(255,107,157,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(78,205,196,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(160,139,250,0.1) 0%, transparent 50%);
+      animation:float 20s ease-in-out infinite;
+      pointer-events:none;
+      z-index:0;
+    }
+    @keyframes float{
+      0%,100%{transform:translate(0,0) rotate(0deg);}
+      33%{transform:translate(30px,-30px) rotate(5deg);}
+      66%{transform:translate(-20px,20px) rotate(-5deg);}
+    }
+
+    .container{
+      max-width:900px;
+      margin:0 auto;
+      position:relative;
+      z-index:1;
+    }
+
+    .login-container{
+      max-width:450px;
+      margin:80px auto;
+      background:var(--card-bg);
+      padding:45px;
+      border-radius:30px;
+      box-shadow:0 15px 50px var(--shadow);
+      border:4px solid var(--primary);
+      animation:fadeIn 0.6s ease-out;
+    }
+    @keyframes fadeIn{
+      from{opacity:0; transform:scale(0.95);}
+      to{opacity:1; transform:scale(1);}
+    }
+
+    .login-header{ text-align:center; margin-bottom:30px; }
+    .login-header .emoji{ font-size:5rem; animation:bounce 2s ease-in-out infinite; }
+    .login-header h2{ font-size:2rem; font-weight:900; color:var(--primary); margin-top:10px; }
+    @keyframes bounce{
+      0%,100%{transform:translateY(0) rotate(0deg);}
+      25%{transform:translateY(-10px) rotate(-5deg);}
+      75%{transform:translateY(-5px) rotate(5deg);}
+    }
+
+    .form-group{ margin-bottom:18px; }
+    .form-group label{
+      display:block; font-size:1.1rem; font-weight:800;
+      color:#333; margin-bottom:8px;
+    }
+    .form-group input{
+      width:100%;
+      padding:14px 18px;
+      border:3px solid var(--success);
+      border-radius:15px;
+      font-size:1.05rem;
+      font-family:'M PLUS Rounded 1c',sans-serif;
+      font-weight:800;
+      transition:all 0.25s ease;
+    }
+    .form-group input:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(255,107,157,0.2);
+      transform:scale(1.01);
+    }
+
+    .login-btn{
+      width:100%;
+      padding:16px;
+      background:linear-gradient(135deg,var(--primary),var(--purple));
+      color:white;
+      border:none;
+      border-radius:15px;
+      font-size:1.25rem;
+      font-weight:900;
+      font-family:'M PLUS Rounded 1c',sans-serif;
+      cursor:pointer;
+      transition:all 0.25s ease;
+      box-shadow:0 5px 20px rgba(255,107,157,0.4);
+      margin-top:8px;
+    }
+    .login-btn:hover{ transform:translateY(-2px); box-shadow:0 8px 25px rgba(255,107,157,0.5); }
+
+    .error-message{
+      color:#ff4444;
+      font-weight:800;
+      text-align:center;
+      margin-top:12px;
+      display:none;
+    }
+
+    .user-info{
+      display:flex; justify-content:space-between; align-items:center;
+      background:var(--card-bg);
+      padding:14px 22px;
+      border-radius:15px;
+      margin-bottom:18px;
+      box-shadow:0 5px 20px var(--shadow);
+      border:3px solid var(--success);
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .user-name{ font-size:1.2rem; font-weight:800; color:var(--primary); }
+    .user-buttons{ display:flex; gap:10px; }
+
+    .logout-btn,.home-btn{
+      padding:10px 18px;
+      border:none; border-radius:10px;
+      font-size:1rem; font-weight:800;
+      font-family:'M PLUS Rounded 1c',sans-serif;
+      cursor:pointer;
+      transition:all 0.25s ease;
+    }
+    .logout-btn{ background:var(--warning); color:#333; }
+    .logout-btn:hover{ transform:scale(1.04); box-shadow:0 3px 10px rgba(255,215,61,0.5); }
+    .home-btn{ background:linear-gradient(135deg,var(--purple),var(--blue)); color:white; }
+    .home-btn:hover{ transform:scale(1.04); box-shadow:0 3px 10px rgba(160,139,250,0.5); }
+
+    .header{ text-align:center; margin:22px 0 24px; }
+    .header .emoji{ font-size:4rem; display:inline-block; animation:bounce 2s ease-in-out infinite; }
+    .header h1{
+      font-size:2.6rem; font-weight:900;
+      background:linear-gradient(135deg,var(--primary),var(--purple),var(--success));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-top:8px;
+    }
+
+    .date-display{
+      background:var(--card-bg);
+      padding:18px;
+      border-radius:20px;
+      box-shadow:0 8px 30px var(--shadow);
+      margin-bottom:24px;
+      display:flex; justify-content:space-between; align-items:center;
+      font-size:1.3rem; font-weight:800; color:var(--primary);
+      border:3px solid var(--warning);
+    }
+    .date-nav-btn{
+      padding:10px 16px;
+      background:linear-gradient(135deg,var(--success),var(--blue));
+      color:white;
+      border:none; border-radius:15px;
+      font-size:0.95rem; font-weight:800;
+      font-family:'M PLUS Rounded 1c',sans-serif;
+      cursor:pointer;
+      transition:all 0.25s ease;
+      box-shadow:0 3px 10px rgba(78,205,196,0.3);
+    }
+    .date-nav-btn:hover{ transform:translateY(-2px); box-shadow:0 5px 15px rgba(78,205,196,0.4); }
+    .date-nav-btn:disabled{ opacity:0.5; cursor:not-allowed; }
+    .current-date{ flex:1; text-align:center; }
+
+    .checklist-card{
+      background:var(--card-bg);
+      padding:26px;
+      border-radius:25px;
+      box-shadow:0 10px 40px var(--shadow);
+      margin-bottom:22px;
+      border:4px solid var(--success);
+    }
+
+    .checklist-item{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:18px; margin-bottom:12px;
+      border-radius:15px;
+      background:linear-gradient(135deg, rgba(255,107,157,0.05), rgba(78,205,196,0.05));
+      border:2px solid transparent;
+      transition:all 0.25s ease;
+    }
+    .checklist-item:hover{ transform:translateX(4px); border-color:var(--primary); box-shadow:0 5px 15px rgba(255,107,157,0.2); }
+    .checklist-item.checked-yes{ background:linear-gradient(135deg, rgba(78,205,196,0.2), rgba(96,165,250,0.2)); border-color:var(--success); }
+    .checklist-item.checked-no{ background:linear-gradient(135deg, rgba(255,215,61,0.2), rgba(255,160,122,0.2)); border-color:var(--warning); }
+
+    .item-question{ font-size:1.18rem; font-weight:800; color:#333; flex:1; }
+    .item-buttons{ display:flex; gap:10px; }
+
+    .check-btn{
+      padding:11px 20px;
+      border:none; border-radius:50px;
+      font-size:1.02rem; font-weight:800;
+      font-family:'M PLUS Rounded 1c',sans-serif;
+      cursor:pointer;
+      transition:all 0.25s ease;
+      box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    }
+    .check-btn:hover{ transform:translateY(-2px) scale(1.03); box-shadow:0 6px 20px rgba(0,0,0,0.2); }
+
+    .btn-yes{ background:linear-gradient(135deg,var(--success),var(--blue)); color:white; }
+    .btn-yes.selected{ background:var(--success); box-shadow:0 0 0 4px rgba(78,205,196,0.3); }
+    .btn-no{ background:linear-gradient(135deg,var(--warning),var(--secondary)); color:#333; }
+    .btn-no.selected{ background:var(--warning); box-shadow:0 0 0 4px rgba(255,215,61,0.3); }
+
+    .celebrate{ animation:celebrate 0.6s ease-out; }
+    @keyframes celebrate{
+      0%,100%{transform:scale(1);}
+      25%{transform:scale(1.07) rotate(-4deg);}
+      75%{transform:scale(1.07) rotate(4deg);}
+    }
+
+    .stats-card{
+      background:var(--card-bg);
+      padding:26px;
+      border-radius:25px;
+      box-shadow:0 10px 40px var(--shadow);
+      border:4px solid var(--purple);
+    }
+    .stats-card h2{
+      font-size:1.9rem; font-weight:900; color:var(--purple);
+      margin-bottom:18px; text-align:center;
+    }
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+      gap:18px;
+      margin-bottom:20px;
+    }
+    .stat-item{
+      text-align:center;
+      padding:18px;
+      border-radius:15px;
+      background:linear-gradient(135deg, rgba(160,139,250,0.1), rgba(255,107,157,0.1));
+      border:2px solid var(--purple);
+    }
+    .stat-value{
+      font-size:2.7rem; font-weight:900;
+      background:linear-gradient(135deg,var(--primary),var(--purple));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:4px;
+    }
+    .stat-label{ font-size:1.05rem; font-weight:800; color:#666; }
+
+    .progress-bar-container{
+      margin-top:10px;
+      padding:18px;
+      background:rgba(255,255,255,0.5);
+      border-radius:15px;
+    }
+    .progress-label{ font-size:1.1rem; font-weight:800; color:#333; margin-bottom:8px; }
+    .progress-bar{
+      height:38px;
+      background:rgba(200,200,200,0.3);
+      border-radius:20px;
+      overflow:hidden;
+      position:relative;
+      box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .progress-fill{
+      height:100%;
+      background:linear-gradient(90deg,var(--success),var(--blue),var(--purple));
+      border-radius:20px;
+      transition:width 0.7s ease;
+      display:flex; align-items:center; justify-content:center;
+      color:white; font-weight:900; font-size:1.1rem;
+      box-shadow:0 2px 10px rgba(78,205,196,0.5);
+    }
+    .trophy{ font-size:2.8rem; text-align:center; margin:16px 0; animation:spin 2s ease-in-out infinite; }
+    @keyframes spin{
+      0%,100%{transform:rotate(0deg) scale(1);}
+      50%{transform:rotate(10deg) scale(1.07);}
+    }
+
+    .history-table{ width:100%; border-collapse:separate; border-spacing:0 10px; }
+    .history-table th{
+      background:linear-gradient(135deg,var(--primary),var(--purple));
+      color:white;
+      padding:13px;
+      font-weight:900;
+      font-size:1rem;
+      border-radius:10px;
+      white-space:nowrap;
+    }
+    .history-table td{
+      background:rgba(255,255,255,0.85);
+      padding:12px;
+      text-align:center;
+      font-weight:800;
+      border-bottom:2px solid rgba(160,139,250,0.2);
+      white-space:nowrap;
+    }
+    .history-table tr:hover td{ background:rgba(160,139,250,0.1); }
+    .check-mark{ font-size:1.4rem; }
+    .check-mark.yes{ color:var(--success); }
+    .check-mark.no{ color:var(--warning); }
+
+    .date-cell{
+      cursor:pointer;
+      transition:all 0.2s ease;
+      font-weight:900;
+    }
+    .date-cell:hover{
+      background:rgba(255,107,157,0.2);
+      transform:scale(1.04);
+      color:var(--primary);
+    }
+
+    .hidden{ display:none !important; }
+
+    /* Modal */
+    .modal-overlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.7);
+      display:flex; justify-content:center; align-items:center;
+      z-index:1000;
+      animation:fadeIn 0.25s ease;
+    }
+    .modal-content{
+      background:var(--card-bg);
+      padding:28px;
+      border-radius:25px;
+      max-width:650px;
+      width:92%;
+      max-height:80vh;
+      overflow-y:auto;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3);
+      border:4px solid var(--primary);
+    }
+    .modal-header{ text-align:center; margin-bottom:18px; }
+    .modal-header h2{ font-size:1.8rem; font-weight:900; color:var(--primary); margin-bottom:6px; }
+    .modal-date{ font-size:1.2rem; font-weight:800; color:var(--purple); }
+
+    .modal-checklist-item{
+      display:flex; flex-direction:column;
+      padding:16px;
+      margin-bottom:12px;
+      border-radius:15px;
+      background:linear-gradient(135deg, rgba(255,107,157,0.05), rgba(78,205,196,0.05));
+      border:2px solid transparent;
+    }
+    .modal-checklist-item.checked-yes{
+      background:linear-gradient(135deg, rgba(78,205,196,0.2), rgba(96,165,250,0.2));
+      border-color:var(--success);
+    }
+    .modal-checklist-item.checked-no{
+      background:linear-gradient(135deg, rgba(255,215,61,0.2), rgba(255,160,122,0.2));
+      border-color:var(--warning);
+    }
+    .modal-item-question{ font-size:1.1rem; font-weight:800; color:#333; margin-bottom:12px; }
+    .modal-item-buttons{ display:flex; gap:10px; flex-wrap:wrap; }
+
+    .close-modal-btn{
+      width:100%;
+      padding:14px;
+      background:var(--purple);
+      color:white;
+      border:none;
+      border-radius:15px;
+      font-size:1.15rem;
+      font-weight:800;
+      font-family:'M PLUS Rounded 1c',sans-serif;
+      cursor:pointer;
+      margin-top:10px;
+      transition:all 0.25s ease;
+    }
+    .close-modal-btn:hover{ transform:translateY(-2px); box-shadow:0 5px 20px rgba(160,139,250,0.4); }
+
+    @media (max-width: 768px){
+      .header h1{ font-size:2rem; }
+      .item-question{ font-size:1.05rem; }
+      .check-btn{ padding:10px 14px; font-size:0.92rem; }
+      .login-container{ margin:50px 12px; padding:28px; }
+      .modal-item-buttons{ flex-direction:column; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Initial Choice Screen -->
-    <div id="choiceScreen" class="login-container">
-        <div class="login-header">
-            <div class="emoji">🌟</div>
-            <h2>まいにちのおやくそくチェック</h2>
-        </div>
-        <button class="login-btn" onclick="showLoginScreen()" style="margin-bottom: 20px;">ログイン</button>
-        <button class="login-btn" onclick="showSignupScreen()" style="background: linear-gradient(135deg, var(--success), var(--blue));">あたらしくはじめる</button>
+
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-header">
+      <div class="emoji">🔐</div>
+      <h2>ログイン</h2>
+    </div>
+    <div class="form-group">
+      <label for="loginName">なまえ</label>
+      <input type="text" id="loginName" autocomplete="username" placeholder="例：わかいかえで">
+    </div>
+    <div class="form-group">
+      <label for="loginDob">生年月日（8けた）</label>
+      <input type="password" id="loginDob" inputmode="numeric" autocomplete="current-password" placeholder="例：20160402">
     </div>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-container hidden">
-        <div class="login-header">
-            <div class="emoji">🔐</div>
-            <h2>ログイン</h2>
-        </div>
-        <div id="loginFormDiv">
-            <div class="form-group">
-                <label for="loginUsername">なまえ</label>
-                <input type="text" id="loginUsername" autocomplete="username">
-            </div>
-            <div class="form-group">
-                <label for="loginPassword">パスワード</label>
-                <input type="password" id="loginPassword" autocomplete="current-password">
-            </div>
-            <button class="login-btn" id="loginButton">ログイン</button>
-            <button class="logout-btn" onclick="backToChoice()" style="width: 100%; margin-top: 15px;">もどる</button>
-            <div class="error-message" id="loginErrorMessage">なまえかパスワードがちがいます</div>
-        </div>
+    <button class="login-btn" id="loginButton">ログイン</button>
+    <div class="error-message" id="loginError">なまえか生年月日がちがいます</div>
+  </div>
+
+  <!-- Main App -->
+  <div class="container hidden" id="mainApp">
+    <div class="user-info">
+      <div class="user-name">👤 <span id="displayName"></span>さん</div>
+      <div class="user-buttons">
+        <button class="home-btn" onclick="goToToday()">🏠 きょうにもどる</button>
+        <button class="logout-btn" onclick="logout()">ログアウト</button>
+      </div>
     </div>
 
-    <!-- Signup Screen -->
-    <div id="signupScreen" class="login-container hidden">
-        <div class="login-header">
-            <div class="emoji">✨</div>
-            <h2>あたらしくはじめる</h2>
-        </div>
-        <div id="signupFormDiv">
-            <div class="form-group">
-                <label for="signupUsername">なまえをきめてね</label>
-                <input type="text" id="signupUsername" autocomplete="username">
-            </div>
-            <div class="form-group">
-                <label for="signupPassword">パスワードをきめてね</label>
-                <input type="password" id="signupPassword" autocomplete="new-password">
-            </div>
-            <div class="form-group">
-                <label for="signupPasswordConfirm">もういちどパスワード</label>
-                <input type="password" id="signupPasswordConfirm" autocomplete="new-password">
-            </div>
-            <button class="login-btn" id="signupButton" style="background: linear-gradient(135deg, var(--success), var(--blue));">アカウントをつくる</button>
-            <button class="logout-btn" onclick="backToChoice()" style="width: 100%; margin-top: 15px;">もどる</button>
-            <div class="error-message" id="signupErrorMessage">エラーメッセージ</div>
-        </div>
+    <div class="header">
+      <div class="emoji">🌟</div>
+      <h1>まいにちのおやくそくチェック！</h1>
     </div>
 
-    <!-- Main App -->
-    <div class="container hidden" id="mainApp">
-        <div class="user-info">
-            <div class="user-name">👤 <span id="displayName"></span>さん</div>
-            <div class="user-buttons">
-                <button class="home-btn" onclick="goToToday()">🏠 きょうにもどる</button>
-                <button class="logout-btn" onclick="logout()">ログアウト</button>
-            </div>
-        </div>
-
-        <div class="header">
-            <div class="emoji">🌟</div>
-            <h1>まいにちのおやくそくチェック！</h1>
-        </div>
-
-        <div class="date-display">
-            <button class="date-nav-btn" onclick="changeDate(-1)">◀ まえの日</button>
-            <div class="current-date" id="dateDisplay">📅 </div>
-            <button class="date-nav-btn" onclick="changeDate(1)" id="nextDayBtn">つぎの日 ▶</button>
-        </div>
-
-        <div class="checklist-card">
-            <div id="checklist"></div>
-        </div>
-
-        <div class="stats-card">
-            <h2>📊 こんしゅうのがんばり</h2>
-            
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-value" id="weeklyPercentage">0%</div>
-                    <div class="stat-label">できたりつ</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="todayCount">0/5</div>
-                    <div class="stat-label">きょうのスコア</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="weekStreak">0</div>
-                    <div class="stat-label">れんぞくにっすう</div>
-                </div>
-            </div>
-
-            <div class="progress-bar-container">
-                <div class="progress-label">こんしゅうのたっせいりつ</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
-                </div>
-            </div>
-
-            <div id="trophyDisplay"></div>
-
-            <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--purple); font-size: 1.5rem; text-align: center;">📅 こんしゅうのきろく（日づけをクリックしてにゅうりょく・しゅうせい）</h3>
-            <div style="overflow-x: auto;">
-                <table class="history-table" id="historyTable">
-                    <thead>
-                        <tr>
-                            <th>日づけ</th>
-                            <th>あさごはん</th>
-                            <th>あさがくしゅう</th>
-                            <th>ジャングルジム</th>
-                            <th>せんせいのおはなし</th>
-                            <th>おともだち</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyBody"></tbody>
-                </table>
-            </div>
-        </div>
+    <div class="date-display">
+      <button class="date-nav-btn" onclick="changeDate(-1)">◀ まえの日</button>
+      <div class="current-date" id="dateDisplay">📅 </div>
+      <button class="date-nav-btn" onclick="changeDate(1)" id="nextDayBtn">つぎの日 ▶</button>
     </div>
 
-    <!-- Date Edit Modal -->
-    <div id="dateModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📝 チェックリスト</h2>
-                <div class="modal-date" id="modalDate"></div>
-            </div>
-            <div id="modalChecklist"></div>
-            <button class="close-modal-btn" onclick="closeModal()">とじる</button>
-        </div>
+    <div class="checklist-card">
+      <div id="checklist"></div>
     </div>
 
-    <script>
-        // Audio context for success sound
-        let audioContext;
-        let currentUser = null;
-        let selectedDate = null;
-        let currentViewDate = null;
-        let isSaving = false;
+    <div class="stats-card">
+      <h2>📊 こんしゅうのがんばり</h2>
 
-        const questions = [
-            { id: 'breakfast', text: '朝ごはんは時間までにたべた？', yes: 'たべた！', no: 'たべられなかった' },
-            { id: 'study', text: '朝学習はがんばった？', yes: 'がんばった！', no: 'できなかった' },
-            { id: 'jungle', text: 'ジャングルジムはおりた？', yes: 'おりた！', no: 'おりなかった' },
-            { id: 'teacher', text: '先生のお話はきいた？', yes: 'きいた！', no: 'できなかった' },
-            { id: 'friends', text: 'お友だちにやさしくできた？', yes: 'できた！', no: 'できなかった' }
-        ];
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="weeklyPercentage">0%</div>
+          <div class="stat-label">できたりつ</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="todayCount">0/7</div>
+          <div class="stat-label">きょうのスコア</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="weekStreak">0</div>
+          <div class="stat-label">れんぞくにっすう</div>
+        </div>
+      </div>
 
-        // Screen navigation
-        function showLoginScreen() {
-            document.getElementById('choiceScreen').classList.add('hidden');
-            document.getElementById('loginScreen').classList.remove('hidden');
-        }
+      <div class="progress-bar-container">
+        <div class="progress-label">こんしゅうのたっせいりつ</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width:0%;">0%</div>
+        </div>
+      </div>
 
-        function showSignupScreen() {
-            document.getElementById('choiceScreen').classList.add('hidden');
-            document.getElementById('signupScreen').classList.remove('hidden');
-        }
+      <div id="trophyDisplay"></div>
 
-        function backToChoice() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('signupScreen').classList.add('hidden');
-            document.getElementById('choiceScreen').classList.remove('hidden');
-            document.getElementById('loginErrorMessage').style.display = 'none';
-            document.getElementById('signupErrorMessage').style.display = 'none';
-        }
+      <h3 style="margin-top: 24px; margin-bottom: 12px; color: var(--purple); font-size: 1.4rem; text-align: center;">
+        📅 こんしゅうのきろく（日づけをクリックしてにゅうりょく・しゅうせい）
+      </h3>
+      <div style="overflow-x:auto;">
+        <table class="history-table" id="historyTable">
+          <thead>
+            <tr id="historyHeaderRow"></tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-        // Initialize audio context
-        function initAudio() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  <!-- Date Edit Modal -->
+  <div id="dateModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📝 チェックリスト</h2>
+        <div class="modal-date" id="modalDate"></div>
+      </div>
+      <div id="modalChecklist"></div>
+      <button class="close-modal-btn" onclick="closeModal()">とじる</button>
+    </div>
+  </div>
+
+<script>
+  /** =========================
+   *  設定（ここだけ最初に編集）
+   * ========================= */
+  const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwdyFCu7JIYzVdmgl6rYZQa7OX4Kw9pJ1qth213bvE3vNiAVtfQ7AQQ1Gm4iFE_aNbHuA/exec';
+
+
+  /** =========================
+   *  アプリ本体
+   * ========================= */
+
+  let audioContext;
+  let currentUserName = null;
+  let currentUserDob = null;
+  let selectedDate = null;
+  let currentViewDate = null;
+
+  // ★項目を7つに拡張
+  const questions = [
+    { id: 'toilet',   text: 'おきたらトイレに行った？',     yes: 'いった！',       no: 'わすれた' },
+    { id: 'change',   text: '着がえた？',                   yes: 'きがえた！',     no: 'できなかった' },
+    { id: 'breakfast',text: '朝ごはんは時間までにたべた？', yes: 'たべた！',       no: 'たべられなかった' },
+    { id: 'study',    text: '朝学習はがんばった？',         yes: 'がんばった！',   no: 'できなかった' },
+    { id: 'jungle',   text: 'ジャングルジムはおりた？',     yes: 'おりた！',       no: 'おりなかった' },
+    { id: 'teacher',  text: '先生のお話はきいた？',         yes: 'きいた！',       no: 'できなかった' },
+    { id: 'friends',  text: 'お友だちにやさしくできた？',   yes: 'できた！',       no: 'できなかった' }
+  ];
+
+  function initAudio() {
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  function playSuccessSound() {
+    initAudio();
+    const now = audioContext.currentTime;
+    const freqs = [523.25, 659.25, 783.99, 1046.50];
+    freqs.forEach((f, i) => {
+      const o = audioContext.createOscillator();
+      const g = audioContext.createGain();
+      o.connect(g); g.connect(audioContext.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(f, now + i*0.08);
+      g.gain.setValueAtTime(0.14, now + i*0.08);
+      g.gain.exponentialRampToValueAtTime(0.01, now + i*0.08 + 0.28);
+      o.start(now + i*0.08);
+      o.stop(now + i*0.08 + 0.28);
+    });
+  }
+  function playSadSound() {
+    initAudio();
+    const o = audioContext.createOscillator();
+    const g = audioContext.createGain();
+    o.connect(g); g.connect(audioContext.destination);
+    o.type='sine';
+    const now = audioContext.currentTime;
+    o.frequency.setValueAtTime(392.00, now);
+    o.frequency.setValueAtTime(349.23, now + 0.15);
+    o.frequency.setValueAtTime(293.66, now + 0.30);
+    g.gain.setValueAtTime(0.18, now);
+    g.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+    o.start(now); o.stop(now + 0.5);
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('loginError');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 3000);
+  }
+
+  async function apiAuth(name, dob) {
+    const res = await fetch(GAS_WEBAPP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'auth', name, dob })
+    });
+    const json = await res.json();
+    return json.ok === true;
+  }
+
+  async function apiGetDay(date) {
+    const url = new URL(GAS_WEBAPP_URL);
+    url.searchParams.set('action', 'get');
+    url.searchParams.set('name', currentUserName);
+    url.searchParams.set('dob', currentUserDob);
+    url.searchParams.set('date', date);
+
+    const res = await fetch(url.toString(), { method: 'GET' });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'get failed');
+    return json.data || {};
+  }
+
+  async function apiSetDay(date, data) {
+    const res = await fetch(GAS_WEBAPP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'set', name: currentUserName, dob: currentUserDob, date, data })
+    });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'set failed');
+    return true;
+  }
+
+  async function apiGetAll() {
+    const url = new URL(GAS_WEBAPP_URL);
+    url.searchParams.set('action', 'getall');
+    url.searchParams.set('name', currentUserName);
+    url.searchParams.set('dob', currentUserDob);
+
+    const res = await fetch(url.toString(), { method: 'GET' });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'getall failed');
+    return json.data || {};
+  }
+
+  /** 日付系 */
+  function getToday() {
+    const t = new Date();
+    const y = t.getFullYear();
+    const m = String(t.getMonth() + 1).padStart(2, '0');
+    const d = String(t.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+  function formatDate(dateStr) {
+    const date = new Date(dateStr + 'T00:00:00');
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const days = ['日','月','火','水','木','金','土'];
+    return `${month}月${day}日（${days[date.getDay()]}）`;
+  }
+
+  /** UI：日付移動 */
+  function changeDate(days) {
+    const cd = new Date(currentViewDate + 'T00:00:00');
+    cd.setDate(cd.getDate() + days);
+    const y = cd.getFullYear();
+    const m = String(cd.getMonth()+1).padStart(2,'0');
+    const d = String(cd.getDate()).padStart(2,'0');
+    currentViewDate = `${y}-${m}-${d}`;
+
+    const today = getToday();
+    const nextBtn = document.getElementById('nextDayBtn');
+    if (currentViewDate >= today) {
+      currentViewDate = today;
+      nextBtn.disabled = true;
+    } else {
+      nextBtn.disabled = false;
+    }
+    updateCurrentView();
+  }
+
+  async function updateCurrentView() {
+    document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
+    await renderChecklist();
+    await updateStats();
+  }
+
+  /** チェックリスト表示 */
+  async function renderChecklist() {
+    const data = await apiGetDay(currentViewDate);
+    const checklistDiv = document.getElementById('checklist');
+
+    checklistDiv.innerHTML = questions.map(q => `
+      <div class="checklist-item ${data[q.id] === true ? 'checked-yes' : data[q.id] === false ? 'checked-no' : ''}" id="item-${q.id}">
+        <div class="item-question">${q.text}</div>
+        <div class="item-buttons">
+          <button class="check-btn btn-yes ${data[q.id] === true ? 'selected' : ''}" onclick="handleCheck('${q.id}', true)">${q.yes}</button>
+          <button class="check-btn btn-no  ${data[q.id] === false ? 'selected' : ''}" onclick="handleCheck('${q.id}', false)">${q.no}</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function handleCheck(questionId, isYes) {
+    const item = document.getElementById(`item-${questionId}`);
+    if (item.classList.contains('celebrate')) return;
+
+    if (isYes) playSuccessSound(); else playSadSound();
+    item.classList.add('celebrate');
+    setTimeout(() => item.classList.remove('celebrate'), 600);
+
+    const data = await apiGetDay(currentViewDate);
+    data[questionId] = isYes;
+    await apiSetDay(currentViewDate, data);
+
+    await renderChecklist();
+    await updateStats();
+  }
+
+  /** 週データ（月曜始まり） */
+  async function getWeekDates() {
+    const today = new Date();
+    const dow = today.getDay(); // 0=日
+    const daysSinceMonday = (dow === 0) ? 6 : (dow - 1);
+
+    const dates = [];
+    for (let i = daysSinceMonday; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      dates.push(`${y}-${m}-${dd}`);
+    }
+    return dates;
+  }
+
+  function calculateStats(weekData) {
+    let totalChecks = 0;
+    let yesChecks = 0;
+    let streak = 0;
+    let currentStreak = 0;
+
+    // 直近→過去に見て「全項目YES」を連続カウント
+    [...weekData].reverse().forEach(day => {
+      const data = day.data;
+      if (data && Object.keys(data).length > 0) {
+        let dayYes = 0;
+        let answered = 0;
+
+        questions.forEach(q => {
+          if (data[q.id] !== undefined) {
+            totalChecks++;
+            answered++;
+            if (data[q.id] === true) {
+              yesChecks++;
+              dayYes++;
             }
-        }
-
-        // Play success sound - more fun and upbeat
-        function playSuccessSound() {
-            initAudio();
-            
-            const now = audioContext.currentTime;
-            const frequencies = [523.25, 659.25, 783.99, 1046.50];
-            
-            frequencies.forEach((freq, index) => {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(freq, now + index * 0.08);
-                
-                gainNode.gain.setValueAtTime(0.15, now + index * 0.08);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + index * 0.08 + 0.3);
-                
-                oscillator.start(now + index * 0.08);
-                oscillator.stop(now + index * 0.08 + 0.3);
-            });
-        }
-
-        // Play sad sound for "no" buttons
-        function playSadSound() {
-            initAudio();
-            
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.type = 'sine';
-            const now = audioContext.currentTime;
-            
-            oscillator.frequency.setValueAtTime(392.00, now);
-            oscillator.frequency.setValueAtTime(349.23, now + 0.15);
-            oscillator.frequency.setValueAtTime(293.66, now + 0.30);
-            
-            gainNode.gain.setValueAtTime(0.2, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-            
-            oscillator.start(now);
-            oscillator.stop(now + 0.5);
-        }
-
-        // Login functionality
-        document.getElementById('loginButton').addEventListener('click', () => {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!username || !password) {
-                alert('なまえとパスワードをにゅうりょくしてください');
-                return;
-            }
-
-            try {
-                const userKey = `user:${username}`;
-                const userDataStr = localStorage.getItem(userKey);
-                
-                if (userDataStr) {
-                    const userData = JSON.parse(userDataStr);
-                    if (userData.password === password) {
-                        loginUser(username);
-                    } else {
-                        showLoginError();
-                    }
-                } else {
-                    showLoginError();
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                alert('ログインエラー: ' + error.message);
-            }
+          }
         });
 
-        // Signup functionality
-        document.getElementById('signupButton').addEventListener('click', () => {
-            const username = document.getElementById('signupUsername').value.trim();
-            const password = document.getElementById('signupPassword').value;
-            const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
-            
-            if (!username || !password || !passwordConfirm) {
-                showSignupError('すべてにゅうりょくしてください');
-                return;
-            }
-
-            if (password !== passwordConfirm) {
-                showSignupError('パスワードがちがいます');
-                return;
-            }
-
-            try {
-                const userKey = `user:${username}`;
-                const existingUser = localStorage.getItem(userKey);
-                
-                if (existingUser) {
-                    showSignupError('このなまえはすでにつかわれています');
-                    return;
-                }
-
-                localStorage.setItem(userKey, JSON.stringify({ password }));
-                alert(`ようこそ、${username}さん！アカウントをつくりました！`);
-                loginUser(username);
-            } catch (error) {
-                console.error('Signup error:', error);
-                alert('アカウントさくせいエラー: ' + error.message);
-            }
-        });
-
-        function showLoginError() {
-            const errorMsg = document.getElementById('loginErrorMessage');
-            errorMsg.style.display = 'block';
-            setTimeout(() => {
-                errorMsg.style.display = 'none';
-            }, 3000);
+        // “全項目に回答”かつ“全項目YES”の日だけ連続対象
+        if (answered === questions.length && dayYes === questions.length) {
+          currentStreak++;
+          streak = Math.max(streak, currentStreak);
+        } else {
+          currentStreak = 0;
         }
+      }
+    });
 
-        function showSignupError(message) {
-            const errorMsg = document.getElementById('signupErrorMessage');
-            errorMsg.textContent = message;
-            errorMsg.style.display = 'block';
-            setTimeout(() => {
-                errorMsg.style.display = 'none';
-            }, 3000);
-        }
+    const percentage = totalChecks > 0 ? Math.round((yesChecks / totalChecks) * 100) : 0;
+    return { percentage, streak };
+  }
 
-        function loginUser(username) {
-            currentUser = username;
-            document.getElementById('displayName').textContent = username;
-            document.getElementById('choiceScreen').classList.add('hidden');
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('signupScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            init();
-        }
+  async function updateStats() {
+    const all = await apiGetAll();
+    const weekDates = await getWeekDates();
 
-        function logout() {
-            currentUser = null;
-            selectedDate = null;
-            document.getElementById('choiceScreen').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('signupUsername').value = '';
-            document.getElementById('signupPassword').value = '';
-            document.getElementById('signupPasswordConfirm').value = '';
-        }
+    const weekData = weekDates.map(date => ({
+      date,
+      data: all[date] || null
+    }));
 
-        // Change the currently viewed date
-        function changeDate(days) {
-            const currentDate = new Date(currentViewDate + 'T00:00:00');
-            currentDate.setDate(currentDate.getDate() + days);
-            
-            const year = currentDate.getFullYear();
-            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-            const day = String(currentDate.getDate()).padStart(2, '0');
-            currentViewDate = `${year}-${month}-${day}`;
-            
-            const today = getToday();
-            const nextBtn = document.getElementById('nextDayBtn');
-            if (currentViewDate >= today) {
-                currentViewDate = today;
-                nextBtn.disabled = true;
-            } else {
-                nextBtn.disabled = false;
-            }
-            
-            updateCurrentView();
-        }
+    const stats = calculateStats(weekData);
 
-        async function updateCurrentView() {
-            document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
-            await renderChecklist();
-            await updateStats();
-        }
+    const todayStr = getToday();
+    const todayData = all[todayStr] || {};
+    const todayYes = questions.filter(q => todayData[q.id] === true).length;
 
-        // Date modal functions
-        function openDateModal(date) {
-            selectedDate = date;
-            document.getElementById('modalDate').textContent = formatDate(date);
-            document.getElementById('dateModal').classList.remove('hidden');
-            renderModalChecklist();
-        }
+    document.getElementById('weeklyPercentage').textContent = `${stats.percentage}%`;
+    document.getElementById('todayCount').textContent = `${todayYes}/${questions.length}`;
+    document.getElementById('weekStreak').textContent = `${stats.streak}`;
 
-        function closeModal() {
-            document.getElementById('dateModal').classList.add('hidden');
-            selectedDate = null;
-            updateStats();
-        }
+    const progressFill = document.getElementById('progressFill');
+    progressFill.style.width = `${stats.percentage}%`;
+    progressFill.textContent = `${stats.percentage}%`;
 
-        async function renderModalChecklist() {
-            const data = loadDayData(selectedDate);
-            const checklistDiv = document.getElementById('modalChecklist');
-            
-            checklistDiv.innerHTML = questions.map(q => `
-                <div class="modal-checklist-item ${data[q.id] === true ? 'checked-yes' : data[q.id] === false ? 'checked-no' : ''}" id="modal-item-${q.id}">
-                    <div class="modal-item-question">${q.text}</div>
-                    <div class="modal-item-buttons">
-                        <button class="check-btn btn-yes ${data[q.id] === true ? 'selected' : ''}" 
-                                onclick="handleModalCheck('${q.id}', true)">
-                            ${q.yes}
-                        </button>
-                        <button class="check-btn btn-no ${data[q.id] === false ? 'selected' : ''}" 
-                                onclick="handleModalCheck('${q.id}', false)">
-                            ${q.no}
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
+    const trophyDisplay = document.getElementById('trophyDisplay');
+    if (stats.percentage >= 80) {
+      trophyDisplay.innerHTML = '<div class="trophy">🏆 すごい！よくがんばったね！</div>';
+    } else if (stats.percentage >= 60) {
+      trophyDisplay.innerHTML = '<div class="trophy">⭐ いいちょうしだね！</div>';
+    } else {
+      trophyDisplay.innerHTML = '<div class="trophy">💪 がんばろう！</div>';
+    }
 
-        async function handleModalCheck(questionId, isYes) {
-            const item = document.getElementById(`modal-item-${questionId}`);
-            if (item.classList.contains('celebrate')) {
-                return;
-            }
-            
-            if (isYes) {
-                playSuccessSound();
-            } else {
-                playSadSound();
-            }
-            
-            item.classList.add('celebrate');
-            setTimeout(() => item.classList.remove('celebrate'), 600);
-            
-            const data = loadDayData(selectedDate);
-            data[questionId] = isYes;
-            
-            saveDayData(selectedDate, data);
-            
-            await renderModalChecklist();
-            
-            if (selectedDate === currentViewDate) {
-                await renderChecklist();
-            }
-        }
+    renderHistoryHeader();
+    renderHistory(weekData);
+  }
 
-        function getToday() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
+  function renderHistoryHeader() {
+    const row = document.getElementById('historyHeaderRow');
+    const headers = ['日づけ', ...questions.map(q => {
+      // 表は短くしたいので、軽いラベルに
+      if (q.id === 'toilet') return 'トイレ';
+      if (q.id === 'change') return '着がえ';
+      if (q.id === 'breakfast') return 'あさごはん';
+      if (q.id === 'study') return 'あさがくしゅう';
+      if (q.id === 'jungle') return 'ジャングルジム';
+      if (q.id === 'teacher') return 'おはなし';
+      if (q.id === 'friends') return 'おともだち';
+      return q.id;
+    })];
 
-        function formatDate(dateStr) {
-            const date = new Date(dateStr + 'T00:00:00');
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const days = ['日', '月', '火', '水', '木', '金', '土'];
-            const dayOfWeek = days[date.getDay()];
-            return `${month}月${day}日（${dayOfWeek}）`;
-        }
+    row.innerHTML = headers.map(h => `<th>${h}</th>`).join('');
+  }
 
-        function loadDayData(date) {
-            if (!currentUser) return {};
-            try {
-                const key = `habits:${currentUser}:${date}`;
-                const data = localStorage.getItem(key);
-                return data ? JSON.parse(data) : {};
-            } catch (error) {
-                console.error('読み込みエラー:', error);
-                return {};
-            }
-        }
+  function renderHistory(weekData) {
+    const tbody = document.getElementById('historyBody');
 
-        function saveDayData(date, data) {
-            if (!currentUser) return;
-            
-            if (isSaving) {
-                setTimeout(() => saveDayData(date, data), 100);
-                return;
-            }
-            
-            isSaving = true;
-            
-            try {
-                const key = `habits:${currentUser}:${date}`;
-                localStorage.setItem(key, JSON.stringify(data));
-                isSaving = false;
-                return true;
-            } catch (error) {
-                isSaving = false;
-                console.error('保存エラー:', error);
-                return false;
-            }
-        }
+    tbody.innerHTML = weekData.map(day => {
+      const cells = questions.map(q => {
+        const v = day.data ? day.data[q.id] : undefined;
+        if (v === undefined) return `<td>-</td>`;
+        return `<td><span class="check-mark ${v ? 'yes' : 'no'}">${v ? '⭕' : '❌'}</span></td>`;
+      }).join('');
 
-        async function getWeekData() {
-            const today = new Date();
-            const dayOfWeek = today.getDay();
-            const weekData = [];
-            
-            const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-            
-            for (let i = daysSinceMonday; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                const dateStr = `${year}-${month}-${day}`;
-                
-                const data = loadDayData(dateStr);
-                weekData.push({
-                    date: dateStr,
-                    data: Object.keys(data).length > 0 ? data : null
-                });
-            }
-            
-            return weekData;
-        }
+      return `<tr>
+        <td class="date-cell" onclick="openDateModal('${day.date}')">${formatDate(day.date)}</td>
+        ${cells}
+      </tr>`;
+    }).join('');
+  }
 
-        function calculateStats(weekData) {
-            let totalChecks = 0;
-            let yesChecks = 0;
-            let streak = 0;
-            let currentStreak = 0;
+  /** Modal（過去の日付編集） */
+  function openDateModal(date) {
+    selectedDate = date;
+    document.getElementById('modalDate').textContent = formatDate(date);
+    document.getElementById('dateModal').classList.remove('hidden');
+    renderModalChecklist();
+  }
 
-            weekData.slice().reverse().forEach(day => {
-                if (day.data) {
-                    let dayYes = 0;
-                    questions.forEach(q => {
-                        if (day.data[q.id] !== undefined) {
-                            totalChecks++;
-                            if (day.data[q.id] === true) {
-                                yesChecks++;
-                                dayYes++;
-                            }
-                        }
-                    });
-                    
-                    if (dayYes === questions.length) {
-                        currentStreak++;
-                        streak = Math.max(streak, currentStreak);
-                    } else {
-                        currentStreak = 0;
-                    }
-                }
-            });
+  function closeModal() {
+    document.getElementById('dateModal').classList.add('hidden');
+    selectedDate = null;
+    updateStats();
+  }
 
-            const percentage = totalChecks > 0 ? Math.round((yesChecks / totalChecks) * 100) : 0;
-            
-            return { percentage, streak, yesChecks, totalChecks };
-        }
+  async function renderModalChecklist() {
+    const data = await apiGetDay(selectedDate);
+    const checklistDiv = document.getElementById('modalChecklist');
 
-        async function renderChecklist() {
-            const data = loadDayData(currentViewDate);
-            const checklistDiv = document.getElementById('checklist');
-            
-            checklistDiv.innerHTML = questions.map(q => `
-                <div class="checklist-item ${data[q.id] === true ? 'checked-yes' : data[q.id] === false ? 'checked-no' : ''}" id="item-${q.id}">
-                    <div class="item-question">${q.text}</div>
-                    <div class="item-buttons">
-                        <button class="check-btn btn-yes ${data[q.id] === true ? 'selected' : ''}" 
-                                onclick="handleCheck('${q.id}', true)">
-                            ${q.yes}
-                        </button>
-                        <button class="check-btn btn-no ${data[q.id] === false ? 'selected' : ''}" 
-                                onclick="handleCheck('${q.id}', false)">
-                            ${q.no}
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
+    checklistDiv.innerHTML = questions.map(q => `
+      <div class="modal-checklist-item ${data[q.id] === true ? 'checked-yes' : data[q.id] === false ? 'checked-no' : ''}" id="modal-item-${q.id}">
+        <div class="modal-item-question">${q.text}</div>
+        <div class="modal-item-buttons">
+          <button class="check-btn btn-yes ${data[q.id] === true ? 'selected' : ''}" onclick="handleModalCheck('${q.id}', true)">${q.yes}</button>
+          <button class="check-btn btn-no  ${data[q.id] === false ? 'selected' : ''}" onclick="handleModalCheck('${q.id}', false)">${q.no}</button>
+        </div>
+      </div>
+    `).join('');
+  }
 
-        async function handleCheck(questionId, isYes) {
-            const item = document.getElementById(`item-${questionId}`);
-            if (item.classList.contains('celebrate')) {
-                return;
-            }
-            
-            if (isYes) {
-                playSuccessSound();
-            } else {
-                playSadSound();
-            }
-            
-            item.classList.add('celebrate');
-            setTimeout(() => item.classList.remove('celebrate'), 600);
-            
-            const data = loadDayData(currentViewDate);
-            data[questionId] = isYes;
-            
-            saveDayData(currentViewDate, data);
-            
-            await renderChecklist();
-            await updateStats();
-        }
+  async function handleModalCheck(questionId, isYes) {
+    const item = document.getElementById(`modal-item-${questionId}`);
+    if (item.classList.contains('celebrate')) return;
 
-        async function updateStats() {
-            const weekData = await getWeekData();
-            const stats = calculateStats(weekData);
-            
-            const todayData = loadDayData(getToday());
-            const todayYes = questions.filter(q => todayData[q.id] === true).length;
+    if (isYes) playSuccessSound(); else playSadSound();
+    item.classList.add('celebrate');
+    setTimeout(() => item.classList.remove('celebrate'), 600);
 
-            document.getElementById('weeklyPercentage').textContent = `${stats.percentage}%`;
-            document.getElementById('todayCount').textContent = `${todayYes}/5`;
-            document.getElementById('weekStreak').textContent = stats.streak;
-            
-            const progressFill = document.getElementById('progressFill');
-            progressFill.style.width = `${stats.percentage}%`;
-            progressFill.textContent = `${stats.percentage}%`;
+    const data = await apiGetDay(selectedDate);
+    data[questionId] = isYes;
+    await apiSetDay(selectedDate, data);
 
-            const trophyDisplay = document.getElementById('trophyDisplay');
-            if (stats.percentage >= 80) {
-                trophyDisplay.innerHTML = '<div class="trophy">🏆 すごい！よくがんばったね！</div>';
-            } else if (stats.percentage >= 60) {
-                trophyDisplay.innerHTML = '<div class="trophy">⭐ いいちょうしだね！</div>';
-            } else {
-                trophyDisplay.innerHTML = '<div class="trophy">💪 がんばろう！</div>';
-            }
+    await renderModalChecklist();
+    if (selectedDate === currentViewDate) await renderChecklist();
+  }
 
-            renderHistory(weekData);
-        }
+  /** 今日に戻る */
+  function goToToday() {
+    currentViewDate = getToday();
+    document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
+    document.getElementById('nextDayBtn').disabled = true;
+    updateCurrentView();
+  }
 
-        async function renderHistory(weekData) {
-            if (!weekData) {
-                weekData = await getWeekData();
-            }
-            
-            const tbody = document.getElementById('historyBody');
-            tbody.innerHTML = weekData.map(day => {
-                const checks = questions.map(q => {
-                    const value = day.data ? day.data[q.id] : undefined;
-                    
-                    if (value === undefined) {
-                        return `<td>-</td>`;
-                    }
-                    return `<td><span class="check-mark ${value ? 'yes' : 'no'}">${value ? '⭕' : '❌'}</span></td>`;
-                }).join('');
-                
-                return `<tr><td class="date-cell" onclick="openDateModal('${day.date}')">${formatDate(day.date)}</td>${checks}</tr>`;
-            }).join('');
-        }
+  function logout() {
+    currentUserName = null;
+    currentUserDob = null;
+    selectedDate = null;
+    currentViewDate = null;
+    document.getElementById('mainApp').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('loginName').value = '';
+    document.getElementById('loginDob').value = '';
+  }
 
-        async function init() {
-            currentViewDate = getToday();
-            document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
-            
-            document.getElementById('nextDayBtn').disabled = true;
-            
-            await renderChecklist();
-            await updateStats();
-        }
+  async function initAppAfterLogin() {
+    document.getElementById('displayName').textContent = currentUserName;
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
 
-        function goToToday() {
-            currentViewDate = getToday();
-            document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
-            document.getElementById('nextDayBtn').disabled = true;
-            updateCurrentView();
-        }
+    currentViewDate = getToday();
+    document.getElementById('dateDisplay').textContent = `📅 ${formatDate(currentViewDate)}`;
+    document.getElementById('nextDayBtn').disabled = true;
 
-        // Global functions
-        window.handleCheck = handleCheck;
-        window.handleModalCheck = handleModalCheck;
-        window.logout = logout;
-        window.openDateModal = openDateModal;
-        window.closeModal = closeModal;
-        window.showLoginScreen = showLoginScreen;
-        window.showSignupScreen = showSignupScreen;
-        window.backToChoice = backToChoice;
-        window.changeDate = changeDate;
-        window.goToToday = goToToday;
+    await renderChecklist();
+    await updateStats();
+  }
 
-        // Enter key support
-        document.getElementById('loginPassword').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') document.getElementById('loginButton').click();
-        });
-        document.getElementById('signupPasswordConfirm').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') document.getElementById('signupButton').click();
-        });
-    </script>
+  /** ログインボタン */
+  document.getElementById('loginButton').addEventListener('click', async () => {
+    const name = document.getElementById('loginName').value.trim();
+    const dob  = document.getElementById('loginDob').value.trim();
+
+    if (!GAS_WEBAPP_URL || GAS_WEBAPP_URL.includes('PASTE_YOUR_GAS_WEBAPP_URL')) {
+      showError('まずGASのURLを設定してね');
+      return;
+    }
+    if (!name || !dob) {
+      showError('なまえと生年月日をにゅうりょくしてね');
+      return;
+    }
+    if (!/^\d{8}$/.test(dob)) {
+      showError('生年月日は 8けた（YYYYMMDD）でいれてね');
+      return;
+    }
+
+    try {
+      const ok = await apiAuth(name, dob);
+      if (!ok) {
+        showError('なまえか生年月日がちがいます');
+        return;
+      }
+      currentUserName = name;
+      currentUserDob  = dob;
+      await initAppAfterLogin();
+    } catch (e) {
+      console.error(e);
+      showError('通信エラー（URLや公開設定を確認）');
+    }
+  });
+
+  // Enterキーでログイン
+  document.getElementById('loginDob').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') document.getElementById('loginButton').click();
+  });
+
+  // グローバル公開
+  window.handleCheck = handleCheck;
+  window.handleModalCheck = handleModalCheck;
+  window.logout = logout;
+  window.openDateModal = openDateModal;
+  window.closeModal = closeModal;
+  window.changeDate = changeDate;
+  window.goToToday = goToToday;
+</script>
 </body>
 </html>
