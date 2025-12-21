@@ -350,7 +350,7 @@
       <input type="text" id="loginDob" placeholder="20170101" maxlength="8" />
     </div>
     <button class="login-btn" id="loginButton">ログイン</button>
-    <div id="errorMessage" class="error-message"></div>
+    <div id="loginError" class="error-message"></div>
   </div>
 </div>
 
@@ -428,19 +428,16 @@
 
 <script>
   // ===== Constants =====
-  const STORE_KEY = 'daily_checklist_data';
-  const AUTH_KEY = 'checklist_auth';
-  const AUTH_DB = [
-    { name: 'わかいかえで', dob: '20160402' },
-  ];
+  const STORE_KEY = 'habit_single_user_store_v1';
+  const AUTH_KEY = 'habit_single_user_auth_v1';
   const questions = [
-    { id: 'toilet',    text: 'じぶんでトイレにいけた？',             yes: 'いけた✅', no: 'いけなかった❌' },
-    { id: 'change',    text: 'ようふくをきがえられた？',             yes: 'きがえた✅', no: 'きがえなかった❌' },
-    { id: 'breakfast', text: 'あさごはんをたべられた？',             yes: 'たべた✅', no: 'たべなかった❌' },
-    { id: 'study',     text: 'あさのがくしゅうをした？',             yes: 'した✅', no: 'しなかった❌' },
-    { id: 'jungle',    text: 'ジャングルジムにのぼれた？',           yes: 'のぼれた✅', no: 'のぼれなかった❌' },
-    { id: 'teacher',   text: 'せんせいやおとうさんのおはなしをきけた？', yes: 'きけた✅', no: 'きけなかった❌' },
-    { id: 'friends',   text: 'おともだちやおねえちゃんとなかよくできた？', yes: 'できた✅', no: 'できなかった❌' }
+    { id: 'toilet',    text: 'おきたらトイレに行った？',     yes: 'いった！',       no: 'わすれた' },
+    { id: 'change',    text: '着がえた？',                   yes: 'きがえた！',     no: 'できなかった' },
+    { id: 'breakfast', text: '朝ごはんは時間までにたべた？', yes: 'たべた！',       no: 'たべられなかった' },
+    { id: 'study',     text: '朝学習はがんばった？',         yes: 'がんばった！',   no: 'できなかった' },
+    { id: 'jungle',    text: 'ジャングルジムはおりた？',     yes: 'おりた！',       no: 'おりなかった' },
+    { id: 'teacher',   text: '先生のお話はきいた？',         yes: 'きいた！',       no: 'できなかった' },
+    { id: 'friends',   text: 'お友だちにやさしくできた？',   yes: 'できた！',       no: 'できなかった' }
   ];
 
   let currentUserName = null;
@@ -535,7 +532,7 @@
 
   // ===== Auth =====
   function isAuthorizedLocal(name, dob) {
-    return AUTH_DB.some(u => u.name === name && u.dob === dob);
+    return !!name && /^\d{8}$/.test(dob);
   }
   async function apiAuth(name, dob) {
     await new Promise(r => setTimeout(r, 300));
@@ -554,18 +551,13 @@
   }
 
   // ===== Data =====
-  function getUserStoreKey() {
-    return `${STORE_KEY}_${currentUserName}_${currentUserDob}`;
-  }
   function loadStore() {
-    const key = getUserStoreKey();
-    const str = localStorage.getItem(key);
+    const str = localStorage.getItem(STORE_KEY);
     if (!str) return {};
     try { return JSON.parse(str); } catch { return {}; }
   }
   function saveStore(data) {
-    const key = getUserStoreKey();
-    localStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
   }
 
   async function apiGetDay(date) {
@@ -595,7 +587,7 @@
 
   // ===== Error =====
   function showError(msg) {
-    const el = document.getElementById('errorMessage');
+    const el = document.getElementById('loginError');
     el.textContent = msg;
     el.style.display = 'block';
     setTimeout(() => { el.style.display='none'; }, 3000);
@@ -858,7 +850,7 @@
   function resetAllData() {
     const ok = confirm('きろくをぜんぶけします。いい？');
     if (!ok) return;
-    localStorage.removeItem(getUserStoreKey());
+    localStorage.removeItem(STORE_KEY);
     updateCurrentView();
   }
 
