@@ -216,240 +216,195 @@
       padding:26px;
       border-radius:25px;
       box-shadow:0 10px 40px var(--shadow);
+      margin-bottom:22px;
       border:4px solid var(--purple);
     }
-    .stats-card h2{ font-size:1.9rem; font-weight:900; color:var(--purple); margin-bottom:18px; text-align:center; }
-    .stats-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
-      gap:18px;
-      margin-bottom:20px;
-    }
-    .stat-item{
-      text-align:center;
-      padding:18px;
-      border-radius:15px;
-      background:linear-gradient(135deg, rgba(160,139,250,0.1), rgba(255,107,157,0.1));
-      border:2px solid var(--purple);
-    }
-    .stat-value{
-      font-size:2.7rem; font-weight:900;
-      background:linear-gradient(135deg,var(--primary),var(--purple));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      margin-bottom:4px;
-    }
-    .stat-label{ font-size:1.05rem; font-weight:800; color:#666; }
-    .progress-bar-container{
-      margin-top:10px;
-      padding:18px;
-      background:rgba(255,255,255,0.5);
-      border-radius:15px;
-    }
-    .progress-label{ font-size:1.1rem; font-weight:800; color:#333; margin-bottom:8px; }
+    .stats-header{ font-size:1.7rem; font-weight:900; color:var(--purple); margin-bottom:20px; text-align:center; }
     .progress-bar{
-      height:38px;
-      background:rgba(200,200,200,0.3);
-      border-radius:20px;
-      overflow:hidden;
-      position:relative;
-      box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);
+      background:#E2E8F0;
+      height:40px; border-radius:25px; overflow:hidden;
+      margin-bottom:26px; position:relative;
+      box-shadow:inset 0 2px 8px rgba(0,0,0,0.1);
     }
     .progress-fill{
-      height:100%;
-      background:linear-gradient(90deg,var(--success),var(--blue),var(--purple));
-      border-radius:20px;
-      transition:width 0.7s ease;
+      background:linear-gradient(135deg,var(--success),var(--blue),var(--purple));
+      height:100%; transition:width 0.6s ease;
       display:flex; align-items:center; justify-content:center;
-      color:white; font-weight:900; font-size:1.1rem;
-      box-shadow:0 2px 10px rgba(78,205,196,0.5);
+      color:white; font-size:1.05rem; font-weight:900;
+      border-radius:25px;
     }
-    .trophy{ font-size:2.8rem; text-align:center; margin:16px 0; animation:spin 2s ease-in-out infinite; }
-    @keyframes spin{
-      0%,100%{transform:rotate(0deg) scale(1);}
-      50%{transform:rotate(10deg) scale(1.07);}
+    .trophy{ font-size:1.6rem; font-weight:900; text-align:center; margin:16px 0; }
+    .stats-details{
+      display:flex; justify-content:space-around; flex-wrap:wrap; gap:14px;
+      margin-top:20px;
     }
+    .stat-item{
+      background:linear-gradient(135deg, rgba(160,139,250,0.1), rgba(96,165,250,0.1));
+      padding:18px; border-radius:15px; text-align:center; flex:1; min-width:130px;
+      border:2px solid var(--purple);
+    }
+    .stat-label{ font-size:0.95rem; font-weight:800; color:#555; margin-bottom:6px; }
+    .stat-value{ font-size:1.6rem; font-weight:900; color:var(--purple); }
 
-    .history-table{ width:100%; border-collapse:separate; border-spacing:0 10px; }
-    .history-table th{
-      background:linear-gradient(135deg,var(--primary),var(--purple));
-      color:white;
-      padding:13px;
-      font-weight:900;
-      font-size:1rem;
-      border-radius:10px;
-      white-space:nowrap;
+    .history-card{
+      background:var(--card-bg);
+      padding:26px;
+      border-radius:25px;
+      box-shadow:0 10px 40px var(--shadow);
+      border:4px solid var(--blue);
     }
-    .history-table td{
-      background:rgba(255,255,255,0.85);
-      padding:12px;
-      text-align:center;
-      font-weight:800;
-      border-bottom:2px solid rgba(160,139,250,0.2);
-      white-space:nowrap;
+    .history-header{ font-size:1.7rem; font-weight:900; color:var(--blue); margin-bottom:20px; text-align:center; }
+    .history-table-wrapper{ overflow-x:auto; }
+    .history-table{
+      width:100%; border-collapse:collapse;
+      font-size:0.9rem; font-weight:800;
     }
-    .history-table tr:hover td{ background:rgba(160,139,250,0.1); }
-    .check-mark{ font-size:1.4rem; }
-    .check-mark.yes{ color:var(--success); }
-    .check-mark.no{ color:var(--warning); }
-    .date-cell{
-      cursor:pointer;
-      transition:all 0.2s ease;
-      font-weight:900;
+    .history-table th, .history-table td{
+      padding:12px 10px; text-align:center;
+      border:2px solid #E2E8F0;
     }
-    .date-cell:hover{
-      background:rgba(255,107,157,0.2);
-      transform:scale(1.04);
-      color:var(--primary);
+    .history-table thead{ background:linear-gradient(135deg, var(--blue), var(--purple)); color:white; }
+    .history-table tbody tr:nth-child(even){ background:rgba(96,165,250,0.05); }
+    .history-table tbody tr:hover{ background:rgba(96,165,250,0.15); }
+    .check-mark{
+      display:inline-block; font-size:1.1rem; font-weight:900;
+      padding:4px 8px; border-radius:8px;
     }
+    .check-mark.yes{ background:rgba(78,205,196,0.3); color:var(--success); }
+    .check-mark.no{ background:rgba(255,215,61,0.3); color:#d97706; }
+    .date-cell{ cursor:pointer; color:var(--primary); font-weight:900; text-decoration:underline; }
+    .date-cell:hover{ color:var(--purple); }
 
-    .hidden{ display:none !important; }
-
-    /* Modal */
-    .modal-overlay{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,0.7);
-      display:flex; justify-content:center; align-items:center;
-      z-index:1000;
-      animation:fadeIn 0.25s ease;
+    .modal{
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center;
+      z-index:1000; padding:20px;
     }
+    .modal.hidden{ display:none; }
     .modal-content{
       background:var(--card-bg);
-      padding:28px;
-      border-radius:25px;
-      max-width:650px;
-      width:92%;
-      max-height:80vh;
-      overflow-y:auto;
-      box-shadow:0 20px 60px rgba(0,0,0,0.3);
+      padding:30px; border-radius:25px;
+      max-width:700px; width:100%;
+      max-height:80vh; overflow-y:auto;
+      box-shadow:0 15px 60px rgba(0,0,0,0.3);
       border:4px solid var(--primary);
     }
-    .modal-header{ text-align:center; margin-bottom:18px; }
-    .modal-header h2{ font-size:1.8rem; font-weight:900; color:var(--primary); margin-bottom:6px; }
-    .modal-date{ font-size:1.2rem; font-weight:800; color:var(--purple); }
+    .modal-header{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:22px; padding-bottom:14px; border-bottom:3px solid var(--primary);
+    }
+    .modal-title{ font-size:1.6rem; font-weight:900; color:var(--primary); }
+    .modal-close-btn{
+      background:var(--warning); color:#333;
+      border:none; border-radius:50%;
+      width:38px; height:38px;
+      font-size:1.3rem; font-weight:900;
+      cursor:pointer;
+      transition:all 0.2s ease;
+    }
+    .modal-close-btn:hover{ transform:scale(1.08); background:var(--secondary); }
     .modal-checklist-item{
-      display:flex; flex-direction:column;
-      padding:16px;
-      margin-bottom:12px;
-      border-radius:15px;
+      display:flex; flex-direction:column; gap:10px;
+      padding:16px; margin-bottom:12px; border-radius:15px;
       background:linear-gradient(135deg, rgba(255,107,157,0.05), rgba(78,205,196,0.05));
       border:2px solid transparent;
-    }
-    .modal-checklist-item.checked-yes{
-      background:linear-gradient(135deg, rgba(78,205,196,0.2), rgba(96,165,250,0.2));
-      border-color:var(--success);
-    }
-    .modal-checklist-item.checked-no{
-      background:linear-gradient(135deg, rgba(255,215,61,0.2), rgba(255,160,122,0.2));
-      border-color:var(--warning);
-    }
-    .modal-item-question{ font-size:1.1rem; font-weight:800; color:#333; margin-bottom:12px; }
-    .modal-item-buttons{ display:flex; gap:10px; flex-wrap:wrap; }
-    .close-modal-btn{
-      width:100%;
-      padding:14px;
-      background:var(--purple);
-      color:white;
-      border:none;
-      border-radius:15px;
-      font-size:1.15rem;
-      font-weight:800;
-      font-family:'M PLUS Rounded 1c',sans-serif;
-      cursor:pointer;
-      margin-top:10px;
       transition:all 0.25s ease;
     }
-    .close-modal-btn:hover{ transform:translateY(-2px); box-shadow:0 5px 20px rgba(160,139,250,0.4); }
+    .modal-checklist-item.checked-yes{ background:linear-gradient(135deg, rgba(78,205,196,0.2), rgba(96,165,250,0.2)); border-color:var(--success); }
+    .modal-checklist-item.checked-no{ background:linear-gradient(135deg, rgba(255,215,61,0.2), rgba(255,160,122,0.2)); border-color:var(--warning); }
+    .modal-item-question{ font-size:1.08rem; font-weight:800; color:#333; }
+    .modal-item-buttons{ display:flex; gap:8px; flex-wrap:wrap; }
+
+    .hidden{ display:none; }
 
     @media (max-width: 768px){
       .header h1{ font-size:2rem; }
-      .item-question{ font-size:1.05rem; }
-      .check-btn{ padding:10px 14px; font-size:0.92rem; }
-      .login-container{ margin:50px 12px; padding:28px; }
-      .modal-item-buttons{ flex-direction:column; }
-      .item-buttons{ justify-content:flex-start; }
+      .date-display{ flex-direction:column; gap:12px; }
+      .checklist-item{ flex-direction:column; align-items:flex-start; gap:12px; }
+      .item-buttons{ width:100%; justify-content:flex-start; }
+      .stats-details{ flex-direction:column; }
+      .stat-item{ min-width:100%; }
+      .history-table{ font-size:0.8rem; }
+      .history-table th, .history-table td{ padding:8px 6px; }
+      .modal-content{ padding:22px; }
+      .user-info{ flex-direction:column; align-items:flex-start; }
+      .user-buttons{ width:100%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Login Screen（端末内だけの簡易ログイン：記録は同じ端末に保存） -->
-  <div id="loginScreen" class="login-container">
+<!-- Login Screen -->
+<div id="loginScreen">
+  <div class="login-container">
     <div class="login-header">
-      <div class="emoji">🔐</div>
-      <h2>ログイン</h2>
+      <div class="emoji">🌟</div>
+      <h2>まいにちのおやくそくチェック！</h2>
     </div>
     <div class="form-group">
       <label for="loginName">なまえ</label>
-      <input type="text" id="loginName" autocomplete="username">
+      <input type="text" id="loginName" placeholder="なまえをいれてね" />
     </div>
     <div class="form-group">
-      <label for="loginDob">生年月日（8けた）</label>
-      <input type="password" id="loginDob" inputmode="numeric" autocomplete="current-password">
+      <label for="loginDob">生年月日（YYYYMMDD）</label>
+      <input type="text" id="loginDob" placeholder="20170101" maxlength="8" />
     </div>
-
     <button class="login-btn" id="loginButton">ログイン</button>
-    <div class="error-message" id="loginError">なまえか生年月日がちがいます</div>
+    <div id="errorMessage" class="error-message"></div>
   </div>
+</div>
 
-  <!-- Main App -->
-  <div class="container hidden" id="mainApp">
+<!-- Main App -->
+<div id="mainApp" class="hidden">
+  <div class="container">
     <div class="user-info">
-      <div class="user-name">👤 <span id="displayName"></span>さん</div>
+      <div class="user-name">👤 <span id="displayName"></span></div>
       <div class="user-buttons">
-        <button class="home-btn" onclick="goToToday()">🏠 きょうにもどる</button>
-        <button class="reset-btn" onclick="resetAllData()">🧹 ぜんぶけす</button>
+        <button class="home-btn" onclick="goToToday()">きょうにもどる</button>
+        <button class="reset-btn" onclick="resetAllData()">リセット</button>
         <button class="logout-btn" onclick="logout()">ログアウト</button>
       </div>
     </div>
 
     <div class="header">
-      <div class="emoji">🌟</div>
-      <h1>まいにちのおやくそくチェック！</h1>
+      <div class="emoji">🎉</div>
+      <h1>まいにちのおやくそく</h1>
     </div>
 
     <div class="date-display">
-      <button class="date-nav-btn" onclick="changeDate(-1)">◀ まえの日</button>
-      <div class="current-date" id="dateDisplay">📅 </div>
-      <button class="date-nav-btn" onclick="changeDate(1)" id="nextDayBtn">つぎの日 ▶</button>
+      <button class="date-nav-btn" onclick="changeDate(-1)">◀ まえのひ</button>
+      <div class="current-date" id="dateDisplay">📅 2025-01-01</div>
+      <button class="date-nav-btn" id="nextDayBtn" onclick="changeDate(1)" disabled>つぎのひ ▶</button>
     </div>
 
-    <div class="checklist-card">
-      <div id="checklist"></div>
-    </div>
+    <div class="checklist-card" id="checklistCard"></div>
 
     <div class="stats-card">
-      <h2>📊 こんしゅうのがんばり</h2>
-
-      <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-value" id="weeklyPercentage">0%</div>
-          <div class="stat-label">できたりつ</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="todayCount">0/7</div>
-          <div class="stat-label">きょうのスコア</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="weekStreak">0</div>
-          <div class="stat-label">れんぞくにっすう</div>
-        </div>
+      <div class="stats-header">📊 こんしゅうのがんばり</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill">0%</div>
       </div>
-
-      <div class="progress-bar-container">
-        <div class="progress-label">こんしゅうのたっせいりつ</div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill" style="width:0%;">0%</div>
-        </div>
-      </div>
-
       <div id="trophyDisplay"></div>
+      <div class="stats-details">
+        <div class="stat-item">
+          <div class="stat-label">できた</div>
+          <div class="stat-value" id="statYes">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">できなかった</div>
+          <div class="stat-value" id="statNo">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">きろく</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+      </div>
+    </div>
 
-      <h3 style="margin-top: 24px; margin-bottom: 12px; color: var(--purple); font-size: 1.4rem; text-align: center;">
-        📅 こんしゅうのきろく（日づけをクリックしてにゅうりょく・しゅうせい）
-      </h3>
-      <div style="overflow-x:auto;">
-        <table class="history-table" id="historyTable">
+    <div class="history-card">
+      <div class="history-header">📅 1しゅうかんのきろく</div>
+      <div class="history-table-wrapper">
+        <table class="history-table">
           <thead>
             <tr id="historyHeaderRow"></tr>
           </thead>
@@ -458,170 +413,202 @@
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Date Edit Modal -->
-  <div id="dateModal" class="modal-overlay hidden">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>📝 チェックリスト</h2>
-        <div class="modal-date" id="modalDate"></div>
-      </div>
-      <div id="modalChecklist"></div>
-      <button class="close-modal-btn" onclick="closeModal()">とじる</button>
+<!-- Date Modal -->
+<div id="dateModal" class="modal hidden" onclick="if(event.target===this) closeModal()">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">📅 <span id="modalDate"></span></div>
+      <button class="modal-close-btn" onclick="closeModal()">×</button>
     </div>
+    <div id="modalChecklist"></div>
   </div>
+</div>
 
 <script>
-  /** =========================
-   *  GitHub Pages版（端末内保存: localStorage）
-   *  - 記録はこの端末のブラウザに残ります
-   * ========================= */
-
-  // localStorage keys
-  const STORE_KEY = 'habit_single_user_store_v1';
-  const AUTH_KEY  = 'habit_single_user_auth_v1';
-
-  // ★項目7つ
+  // ===== Constants =====
+  const STORE_KEY = 'daily_checklist_data';
+  const AUTH_KEY = 'checklist_auth';
+  const AUTH_DB = [
+    { name: 'こうすけ', dob: '20191113' },
+    { name: 'たかあき', dob: '19890607' },
+    { name: 'ちなつ',   dob: '19891011' }
+  ];
   const questions = [
-    { id: 'toilet',    text: 'おきたらトイレに行った？',     yes: 'いった！',       no: 'わすれた' },
-    { id: 'change',    text: '着がえた？',                   yes: 'きがえた！',     no: 'できなかった' },
-    { id: 'breakfast', text: '朝ごはんは時間までにたべた？', yes: 'たべた！',       no: 'たべられなかった' },
-    { id: 'study',     text: '朝学習はがんばった？',         yes: 'がんばった！',   no: 'できなかった' },
-    { id: 'jungle',    text: 'ジャングルジムはおりた？',     yes: 'おりた！',       no: 'おりなかった' },
-    { id: 'teacher',   text: '先生のお話はきいた？',         yes: 'きいた！',       no: 'できなかった' },
-    { id: 'friends',   text: 'お友だちにやさしくできた？',   yes: 'できた！',       no: 'できなかった' }
+    { id: 'toilet',    text: 'じぶんでトイレにいけた？',             yes: 'いけた✅', no: 'いけなかった❌' },
+    { id: 'change',    text: 'ようふくをきがえられた？',             yes: 'きがえた✅', no: 'きがえなかった❌' },
+    { id: 'breakfast', text: 'あさごはんをたべられた？',             yes: 'たべた✅', no: 'たべなかった❌' },
+    { id: 'study',     text: 'あさのがくしゅうをした？',             yes: 'した✅', no: 'しなかった❌' },
+    { id: 'jungle',    text: 'ジャングルジムにのぼれた？',           yes: 'のぼれた✅', no: 'のぼれなかった❌' },
+    { id: 'teacher',   text: 'せんせいやおとうさんのおはなしをきけた？', yes: 'きけた✅', no: 'きけなかった❌' },
+    { id: 'friends',   text: 'おともだちやおねえちゃんとなかよくできた？', yes: 'できた✅', no: 'できなかった❌' }
   ];
 
-  let audioContext;
   let currentUserName = null;
   let currentUserDob = null;
   let selectedDate = null;
   let currentViewDate = null;
 
-  // ===== Sound =====
-  function initAudio() {
-    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  function playSuccessSound() {
-    initAudio();
-    const now = audioContext.currentTime;
-    const freqs = [523.25, 659.25, 783.99, 1046.50];
-    freqs.forEach((f, i) => {
-      const o = audioContext.createOscillator();
-      const g = audioContext.createGain();
-      o.connect(g); g.connect(audioContext.destination);
-      o.type = 'sine';
-      o.frequency.setValueAtTime(f, now + i*0.08);
-      g.gain.setValueAtTime(0.14, now + i*0.08);
-      g.gain.exponentialRampToValueAtTime(0.01, now + i*0.08 + 0.28);
-      o.start(now + i*0.08);
-      o.stop(now + i*0.08 + 0.28);
-    });
-  }
-  function playSadSound() {
-    initAudio();
-    const o = audioContext.createOscillator();
-    const g = audioContext.createGain();
-    o.connect(g); g.connect(audioContext.destination);
-    o.type='sine';
-    const now = audioContext.currentTime;
-    o.frequency.setValueAtTime(392.00, now);
-    o.frequency.setValueAtTime(349.23, now + 0.15);
-    o.frequency.setValueAtTime(293.66, now + 0.30);
-    g.gain.setValueAtTime(0.18, now);
-    g.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-    o.start(now); o.stop(now + 0.5);
+  // ===== Audio Context (タブレット対応修正) =====
+  let audioCtx = null;
+  let isAudioInitialized = false;
+
+  // AudioContextを初期化する関数
+  function initAudioContext() {
+    if (!audioCtx) {
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        console.log('AudioContext created:', audioCtx.state);
+      } catch (e) {
+        console.error('Failed to create AudioContext:', e);
+        return false;
+      }
+    }
+    
+    // AudioContextがsuspendedの場合はresumeする
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume().then(() => {
+        console.log('AudioContext resumed:', audioCtx.state);
+        isAudioInitialized = true;
+      }).catch(e => {
+        console.error('Failed to resume AudioContext:', e);
+      });
+    } else {
+      isAudioInitialized = true;
+    }
+    
+    return true;
   }
 
-  // ===== UI helpers =====
-  function showError(msg) {
-    const el = document.getElementById('loginError');
-    el.textContent = msg;
-    el.style.display = 'block';
-    setTimeout(() => el.style.display = 'none', 3000);
-  }
-
-  function getToday() {
-    const t = new Date();
-    const y = t.getFullYear();
-    const m = String(t.getMonth() + 1).padStart(2, '0');
-    const d = String(t.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  }
-  function formatDate(dateStr) {
-    const date = new Date(dateStr + 'T00:00:00');
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const days = ['日','月','火','水','木','金','土'];
-    return `${month}月${day}日（${days[date.getDay()]}）`;
-  }
-
-  // ===== localStorage store =====
-  function safeParseJSON(text, fallback) {
-    try {
-      const parsed = JSON.parse(text);
-      return (parsed && typeof parsed === 'object') ? parsed : fallback;
-    } catch {
-      return fallback;
+  // 音を再生する前に必ずAudioContextを確認してresumeする
+  async function ensureAudioReady() {
+    if (!audioCtx) {
+      initAudioContext();
+    }
+    
+    if (audioCtx && audioCtx.state === 'suspended') {
+      try {
+        await audioCtx.resume();
+        console.log('AudioContext resumed before playback');
+      } catch (e) {
+        console.error('Failed to resume audio:', e);
+      }
     }
   }
 
-  function loadStore() {
-    const raw = localStorage.getItem(STORE_KEY);
-    return raw ? safeParseJSON(raw, {}) : {};
-  }
-  function saveStore(store) {
-    localStorage.setItem(STORE_KEY, JSON.stringify(store));
+  function beep(freq, duration) {
+    if (!audioCtx) {
+      console.warn('AudioContext not initialized');
+      return;
+    }
+
+    try {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {
+      console.error('Failed to play beep:', e);
+    }
   }
 
-  function loadAuth() {
-    const raw = localStorage.getItem(AUTH_KEY);
-    return raw ? safeParseJSON(raw, null) : null;
+  async function playSuccessSound() {
+    await ensureAudioReady();
+    beep(523.25, 0.15);
+    setTimeout(() => beep(659.25, 0.15), 100);
+    setTimeout(() => beep(783.99, 0.3), 200);
+  }
+
+  async function playSadSound() {
+    await ensureAudioReady();
+    beep(392, 0.2);
+    setTimeout(() => beep(349.23, 0.3), 150);
+  }
+
+  // ===== Auth =====
+  function isAuthorizedLocal(name, dob) {
+    return AUTH_DB.some(u => u.name === name && u.dob === dob);
+  }
+  async function apiAuth(name, dob) {
+    await new Promise(r => setTimeout(r, 300));
+    return isAuthorizedLocal(name, dob);
   }
   function saveAuth(name, dob) {
     localStorage.setItem(AUTH_KEY, JSON.stringify({ name, dob }));
+  }
+  function loadAuth() {
+    const str = localStorage.getItem(AUTH_KEY);
+    if (!str) return null;
+    try { return JSON.parse(str); } catch { return null; }
   }
   function clearAuth() {
     localStorage.removeItem(AUTH_KEY);
   }
 
-  // ===== “認証” =====
-  // GitHub Pages版はサーバー認証できないので、端末内だけの簡易ログインです。
-  // ここでは「空でなければOK」にして、入力値は端末内にだけ保存します。
-  function isAuthorizedLocal(name, dob) {
-    return !!name && /^\d{8}$/.test(dob);
+  // ===== Data =====
+  function getUserStoreKey() {
+    return `${STORE_KEY}_${currentUserName}_${currentUserDob}`;
+  }
+  function loadStore() {
+    const key = getUserStoreKey();
+    const str = localStorage.getItem(key);
+    if (!str) return {};
+    try { return JSON.parse(str); } catch { return {}; }
+  }
+  function saveStore(data) {
+    const key = getUserStoreKey();
+    localStorage.setItem(key, JSON.stringify(data));
   }
 
-  // ===== Data APIs (local) =====
-  async function apiAuth(name, dob) {
-    return isAuthorizedLocal(name, dob);
-  }
   async function apiGetDay(date) {
-    const store = loadStore();
-    return store[date] || {};
+    const all = loadStore();
+    return all[date] || {};
   }
   async function apiSetDay(date, data) {
-    const store = loadStore();
-    store[date] = data;
-    saveStore(store);
-    return true;
-  }
-  async function apiGetAll() {
-    return loadStore();
+    const all = loadStore();
+    all[date] = data;
+    saveStore(all);
   }
 
-  // ===== Checklist render =====
-  function computeRowClass(v){
-    if (v === true) return 'checked-yes';
-    if (v === false) return 'checked-no';
-    return '';
+  function getToday() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const dd = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${dd}`;
+  }
+  function formatDate(dateStr) {
+    const d = new Date(dateStr+'T00:00:00');
+    const m = d.getMonth()+1;
+    const dd = d.getDate();
+    const dow = ['日','月','火','水','木','金','土'][d.getDay()];
+    return `${m}月${dd}日（${dow}）`;
   }
 
+  // ===== Error =====
+  function showError(msg) {
+    const el = document.getElementById('errorMessage');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display='none'; }, 3000);
+  }
+
+  // ===== Render checklist =====
   async function renderChecklist() {
     const data = await apiGetDay(currentViewDate);
-    const checklistDiv = document.getElementById('checklist');
+    const card = document.getElementById('checklistCard');
 
-    checklistDiv.innerHTML = questions.map(q => {
+    card.innerHTML = questions.map(q => {
       const v = data[q.id];
       return `
       <div class="checklist-item ${computeRowClass(v)}" id="item-${q.id}">
@@ -635,12 +622,23 @@
     }).join('');
   }
 
+  function computeRowClass(val) {
+    if (val === true) return 'checked-yes';
+    if (val === false) return 'checked-no';
+    return '';
+  }
+
   async function handleCheck(questionId, value) {
+    // 最初のボタンタップでAudioContextを初期化
+    if (!isAudioInitialized) {
+      initAudioContext();
+    }
+
     const item = document.getElementById(`item-${questionId}`);
     if (item && item.classList.contains('celebrate')) return;
 
-    if (value === true) playSuccessSound();
-    else if (value === false) playSadSound();
+    if (value === true) await playSuccessSound();
+    else if (value === false) await playSadSound();
 
     if (item) {
       item.classList.add('celebrate');
@@ -650,7 +648,7 @@
     const data = await apiGetDay(currentViewDate);
 
     if (value === null) {
-      delete data[questionId]; // 未回答に戻す
+      delete data[questionId];
     } else {
       data[questionId] = value;
     }
@@ -661,74 +659,33 @@
     await updateStats();
   }
 
-  // ===== Week stats =====
-  async function getWeekDates() {
-    const today = new Date();
-    const dow = today.getDay();
-    const daysSinceMonday = (dow === 0) ? 6 : (dow - 1);
+  // ===== Stats =====
+  async function updateStats() {
+    const weekData = await getWeekData();
 
-    const dates = [];
-    for (let i = daysSinceMonday; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,'0');
-      const dd = String(d.getDate()).padStart(2,'0');
-      dates.push(`${y}-${m}-${dd}`);
-    }
-    return dates;
-  }
+    const stats = {
+      yes: 0,
+      no: 0,
+      total: 0,
+      percentage: 0
+    };
 
-  function calculateStats(weekData) {
-    let totalChecks = 0;
-    let yesChecks = 0;
-    let streak = 0;
-    let currentStreak = 0;
-
-    [...weekData].reverse().forEach(day => {
-      const data = day.data;
-      if (data && Object.keys(data).length > 0) {
-        let dayYes = 0;
-        let answered = 0;
-
-        questions.forEach(q => {
-          if (data[q.id] !== undefined) {
-            totalChecks++;
-            answered++;
-            if (data[q.id] === true) {
-              yesChecks++;
-              dayYes++;
-            }
-          }
-        });
-
-        if (answered === questions.length && dayYes === questions.length) {
-          currentStreak++;
-          streak = Math.max(streak, currentStreak);
-        } else {
-          currentStreak = 0;
-        }
-      }
+    weekData.forEach(day => {
+      const d = day.data || {};
+      Object.values(d).forEach(v => {
+        if (v === true) stats.yes++;
+        else if (v === false) stats.no++;
+      });
     });
 
-    const percentage = totalChecks > 0 ? Math.round((yesChecks / totalChecks) * 100) : 0;
-    return { percentage, streak };
-  }
+    stats.total = stats.yes + stats.no;
+    if (stats.total > 0) {
+      stats.percentage = Math.round((stats.yes / stats.total) * 100);
+    }
 
-  async function updateStats() {
-    const all = await apiGetAll();
-    const weekDates = await getWeekDates();
-
-    const weekData = weekDates.map(date => ({ date, data: all[date] || null }));
-    const stats = calculateStats(weekData);
-
-    const todayStr = getToday();
-    const todayData = all[todayStr] || {};
-    const todayYes = questions.filter(q => todayData[q.id] === true).length;
-
-    document.getElementById('weeklyPercentage').textContent = `${stats.percentage}%`;
-    document.getElementById('todayCount').textContent = `${todayYes}/${questions.length}`;
-    document.getElementById('weekStreak').textContent = `${stats.streak}`;
+    document.getElementById('statYes').textContent = stats.yes;
+    document.getElementById('statNo').textContent = stats.no;
+    document.getElementById('statTotal').textContent = stats.total;
 
     const progressFill = document.getElementById('progressFill');
     progressFill.style.width = `${stats.percentage}%`;
@@ -741,6 +698,24 @@
 
     renderHistoryHeader();
     renderHistory(weekData);
+  }
+
+  async function getWeekData() {
+    const result = [];
+    const today = new Date(currentViewDate + 'T00:00:00');
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      const dateStr = `${y}-${m}-${dd}`;
+      const data = await apiGetDay(dateStr);
+      result.push({ date: dateStr, data });
+    }
+
+    return result;
   }
 
   function renderHistoryHeader() {
@@ -805,11 +780,16 @@
   }
 
   async function handleModalCheck(questionId, value) {
+    // モーダル内でも最初のタップでAudioContextを初期化
+    if (!isAudioInitialized) {
+      initAudioContext();
+    }
+
     const item = document.getElementById(`modal-item-${questionId}`);
     if (item && item.classList.contains('celebrate')) return;
 
-    if (value === true) playSuccessSound();
-    else if (value === false) playSadSound();
+    if (value === true) await playSuccessSound();
+    else if (value === false) await playSadSound();
 
     if (item) {
       item.classList.add('celebrate');
@@ -880,7 +860,7 @@
   function resetAllData() {
     const ok = confirm('きろくをぜんぶけします。いい？');
     if (!ok) return;
-    localStorage.removeItem(STORE_KEY);
+    localStorage.removeItem(getUserStoreKey());
     updateCurrentView();
   }
 
@@ -900,6 +880,11 @@
 
   // login
   document.getElementById('loginButton').addEventListener('click', async () => {
+    // ログインボタンでもAudioContextを初期化（最初のユーザー操作）
+    if (!isAudioInitialized) {
+      initAudioContext();
+    }
+
     const name = document.getElementById('loginName').value.trim();
     const dob  = document.getElementById('loginDob').value.trim();
 
