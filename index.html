@@ -493,71 +493,44 @@
   ];
 
   let audioContext;
-  let audioInitialized = false;
   let currentUserName = null;
   let currentUserDob = null;
   let selectedDate = null;
   let currentViewDate = null;
 
-  // ===== Sound (修正版) =====
+  // ===== Sound =====
   function initAudio() {
-    if (!audioContext) {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    // AudioContextがsuspended状態の場合はresume
-    if (audioContext.state === 'suspended') {
-      audioContext.resume();
-    }
-    audioInitialized = true;
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
-
-  async function ensureAudioReady() {
-    if (!audioContext) {
-      initAudio();
-    }
-    if (audioContext.state === 'suspended') {
-      await audioContext.resume();
-    }
-  }
-
-  async function playSuccessSound() {
-    try {
-      await ensureAudioReady();
-      const now = audioContext.currentTime;
-      const freqs = [523.25, 659.25, 783.99, 1046.50];
-      freqs.forEach((f, i) => {
-        const o = audioContext.createOscillator();
-        const g = audioContext.createGain();
-        o.connect(g); g.connect(audioContext.destination);
-        o.type = 'sine';
-        o.frequency.setValueAtTime(f, now + i*0.08);
-        g.gain.setValueAtTime(0.14, now + i*0.08);
-        g.gain.exponentialRampToValueAtTime(0.01, now + i*0.08 + 0.28);
-        o.start(now + i*0.08);
-        o.stop(now + i*0.08 + 0.28);
-      });
-    } catch (e) {
-      console.warn('音声再生エラー:', e);
-    }
-  }
-
-  async function playSadSound() {
-    try {
-      await ensureAudioReady();
+  function playSuccessSound() {
+    initAudio();
+    const now = audioContext.currentTime;
+    const freqs = [523.25, 659.25, 783.99, 1046.50];
+    freqs.forEach((f, i) => {
       const o = audioContext.createOscillator();
       const g = audioContext.createGain();
       o.connect(g); g.connect(audioContext.destination);
-      o.type='sine';
-      const now = audioContext.currentTime;
-      o.frequency.setValueAtTime(392.00, now);
-      o.frequency.setValueAtTime(349.23, now + 0.15);
-      o.frequency.setValueAtTime(293.66, now + 0.30);
-      g.gain.setValueAtTime(0.18, now);
-      g.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-      o.start(now); o.stop(now + 0.5);
-    } catch (e) {
-      console.warn('音声再生エラー:', e);
-    }
+      o.type = 'sine';
+      o.frequency.setValueAtTime(f, now + i*0.08);
+      g.gain.setValueAtTime(0.14, now + i*0.08);
+      g.gain.exponentialRampToValueAtTime(0.01, now + i*0.08 + 0.28);
+      o.start(now + i*0.08);
+      o.stop(now + i*0.08 + 0.28);
+    });
+  }
+  function playSadSound() {
+    initAudio();
+    const o = audioContext.createOscillator();
+    const g = audioContext.createGain();
+    o.connect(g); g.connect(audioContext.destination);
+    o.type='sine';
+    const now = audioContext.currentTime;
+    o.frequency.setValueAtTime(392.00, now);
+    o.frequency.setValueAtTime(349.23, now + 0.15);
+    o.frequency.setValueAtTime(293.66, now + 0.30);
+    g.gain.setValueAtTime(0.18, now);
+    g.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+    o.start(now); o.stop(now + 0.5);
   }
 
   // ===== UI helpers =====
@@ -612,7 +585,7 @@
     localStorage.removeItem(AUTH_KEY);
   }
 
-  // ===== "認証" =====
+  // ===== “認証” =====
   // GitHub Pages版はサーバー認証できないので、端末内だけの簡易ログインです。
   // ここでは「空でなければOK」にして、入力値は端末内にだけ保存します。
   function isAuthorizedLocal(name, dob) {
@@ -663,16 +636,11 @@
   }
 
   async function handleCheck(questionId, value) {
-    // 初回クリック時にオーディオを初期化
-    if (!audioInitialized) {
-      initAudio();
-    }
-
     const item = document.getElementById(`item-${questionId}`);
     if (item && item.classList.contains('celebrate')) return;
 
-    if (value === true) await playSuccessSound();
-    else if (value === false) await playSadSound();
+    if (value === true) playSuccessSound();
+    else if (value === false) playSadSound();
 
     if (item) {
       item.classList.add('celebrate');
@@ -837,16 +805,11 @@
   }
 
   async function handleModalCheck(questionId, value) {
-    // 初回クリック時にオーディオを初期化
-    if (!audioInitialized) {
-      initAudio();
-    }
-
     const item = document.getElementById(`modal-item-${questionId}`);
     if (item && item.classList.contains('celebrate')) return;
 
-    if (value === true) await playSuccessSound();
-    else if (value === false) await playSadSound();
+    if (value === true) playSuccessSound();
+    else if (value === false) playSadSound();
 
     if (item) {
       item.classList.add('celebrate');
@@ -937,9 +900,6 @@
 
   // login
   document.getElementById('loginButton').addEventListener('click', async () => {
-    // ログインボタンクリック時にオーディオを初期化（ユーザー操作）
-    initAudio();
-
     const name = document.getElementById('loginName').value.trim();
     const dob  = document.getElementById('loginDob').value.trim();
 
